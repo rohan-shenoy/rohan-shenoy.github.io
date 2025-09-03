@@ -442,7 +442,7 @@ ninja.data = [{
           description: "",
           section: "News",},{id: "projects-cs180-project-0-becoming-friends-with-your-camera",
           title: 'CS180 - Project 0. Becoming Friends with Your Camera',
-          description: "Cyprian Zander",
+          description: "Rohan Shenoy",
           section: "Projects",handler: () => {
               window.location.href = "/al-folio/projects/1_project/";
             },},{id: "projects-project-2",
