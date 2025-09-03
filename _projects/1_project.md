@@ -1,7 +1,7 @@
 ---
 layout: page
 title: CS180 - Project 0. Becoming Friends with Your Camera
-description: Cyprian Zander
+description: Rohan Shenoy
 importance: 1
 category: CS180
 related_publications: false
@@ -11,19 +11,19 @@ related_publications: false
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/1.jpg" title="image1" class="img-fluid rounded z-depth-1 fixed-thumb" %}
+    {% include figure.liquid path="assets/Proj0/selfie-comparison/selfie1.jpg" title="image1" class="img-fluid rounded z-depth-1 fixed-thumb" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/2.jpg" title="image2" class="img-fluid rounded z-depth-1 fixed-thumb" %}
+    {% include figure.liquid path="assets/Proj0/selfie-comparison/selfie2.jpg" title="image2" class="img-fluid rounded z-depth-1 fixed-thumb" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/3.jpg" title="image3" class="img-fluid rounded z-depth-1 fixed-thumb" %}
+    {% include figure.liquid path="assets/Proj0/selfie-comparison/selfie3.jpg" title="image3" class="img-fluid rounded z-depth-1 fixed-thumb" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/4.jpg" title="image4" class="img-fluid rounded z-depth-1 fixed-thumb" %}
+    {% include figure.liquid path="assets/Proj0/selfie-comparison/selfie4.jpg" title="image4" class="img-fluid rounded z-depth-1 fixed-thumb" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/5.jpg" title="image5" class="img-fluid rounded z-depth-1 fixed-thumb" %}
+    {% include figure.liquid path="assets/Proj0/selfie-comparison/selfie5.jpg" title="image5" class="img-fluid rounded z-depth-1 fixed-thumb" %}
   </div>
 </div>
 
@@ -41,21 +41,21 @@ When you hold the camera close to the subject's face, the lens has to use a wide
 
 <div class="row">
   <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/s1.JPG" title="arch1" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/Proj0/urban-perspective/urban0.jpg" title="arch1" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/s2.JPG" title="arch2" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/Proj0/urban-perspective/urban1.jpg" title="arch2" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/s3.JPG" title="arch3" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/Proj0/urban-perspective/urban2.jpg" title="arch3" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="row">
   <div class="col-sm-6 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/s4.JPG" title="arch4" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/Proj0/urban-perspective/urban3.jpg" title="arch4" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm-6 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/cs180/p0/s5.JPG" title="arch5" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/Proj0/urban-perspective/urban4.jpg" title="arch5" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 
@@ -76,7 +76,7 @@ When you move the camera backward while zooming in, you change the perspective b
 </p>
 
 <div class="text-center my-4">
-  {% include figure.liquid path="assets/img/cs180/p0/p3_caught_lacking.gif" title="caught_lacking.gif" class="img-fluid rounded z-depth-1 mx-auto d-block" style="max-width: 50%;" %}
+  {% include figure.liquid path="assets/Proj0/dolly-zoom/I_want_you.gif" title="caught_lacking.gif" class="img-fluid rounded z-depth-1 mx-auto d-block" style="max-width: 50%;" %}
 </div>
 
 <div class="caption text-center mt-2">
