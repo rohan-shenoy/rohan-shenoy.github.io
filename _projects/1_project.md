@@ -28,16 +28,18 @@ related_publications: false
 </div>
 
 <div class="caption text-center mt-2">
-  Facial features become increasingly distorted as we move the camera closer to the subject and zoom out.
+  As we back up from the subject and increasingly zoom in, the projection of the face becomes flatter, and more like reality.
 </div>
 
 <p>
-When you hold the camera close to the subject's face, the lens has to use a wide field of view to display the entire face. Wide angles overemphasize perspective, with features closer to the lens (i.e., a nose) looking disproportionately large, while features farther back (ears, background) look smaller. Since selfies are typically captured from up close, perspective is exaggerated, so the subject looks unnatural. At a greater distance and zooming in on the subject, you’re narrowing the field of view. The relative size difference between near and far points on the face and in the background shrinks, so the proportions come out more natural. In other words, you _approach_ an orthogonal projection of the field of view.
+    1.	When you take a photo from very close, the camera lens stretches the perspective, making nearby features like the nose appear much larger than parts of the face that are farther away.
+	2.	Moving the camera back and zooming in reduces this distortion, so the size differences between facial features and the background appear more balanced and realistic.
+	3.	Essentially, photographing from a distance with a tighter frame mimics a more “flat” or orthogonal view, better preserving the natural proportions of the subject.
 </p>
 
 ---
 
-### Part 2: Architectural Perspective Compression
+### Part 2: Perspective Compression
 
 <div class="row">
   <div class="col-sm-4 mt-3 mt-md-0">
@@ -60,19 +62,23 @@ When you hold the camera close to the subject's face, the lens has to use a wide
 </div>
 
 <div class="caption text-center mt-2">
-  Demonstration of perspective compression across two rows of images.
+  Urban perspective comparison
 </div>
 
 <p>
-When you stand far away and zoom in down a street, the lens narrows its field of view. This compresses perspective: objects that are actually separated by large distances along the street appear stacked closely together, making the scene look flattened. Buildings, lampposts, and people at different depths seem almost the same size.
+	1.	Zooming in from a distance along a street reduces the lens’s field of view, which squeezes the space between objects and flattens the scene.
+	2.	Objects that are far apart in reality—like buildings, poles, or people—appear much closer together and more evenly sized.
+	3.	This perspective compression makes the depth of the street seem less pronounced, giving the image a stacked, two-dimensional look.
 </p>
 
 ---
 
-### Part 3: Bringing It All Together
+### Part 3: The Dolly Effect
 
 <p>
-When you move the camera backward while zooming in, you change the perspective but keep the subject about the same size. The background appears to stretch and warp around the subject, creating the dolly zoom effect.
+	1.	Pulling the camera back while zooming in preserves the subject’s size but alters the surrounding scene’s proportions.
+	2.	As the background shifts in scale, it seems to expand or contract around the subject, producing a surreal, warped look.
+	3.	This combination of camera movement and zoom creates the striking “dolly zoom” effect, where the subject stays constant while the environment visually stretches.
 </p>
 
 <div class="text-center my-4">
@@ -80,7 +86,7 @@ When you move the camera backward while zooming in, you change the perspective b
 </div>
 
 <div class="caption text-center mt-2">
-  Just put the fries in the bag, bro
+  Uncle Cyp
 </div>
 
 ---
