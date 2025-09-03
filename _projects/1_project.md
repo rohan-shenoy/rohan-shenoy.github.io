@@ -43,18 +43,18 @@ related_publications: false
 
 <div class="row">
 
-  <div class="col-sm-4 mt-3 mt-md-0">
+  <div class="col-sm-4 mt-2 mt-md-0">
     {% include figure.liquid path="assets/Proj0/urban-perspective/urban1.jpg" title="arch2" class="img-fluid rounded z-depth-1" %}
   </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
+  <div class="col-sm-4 mt-2 mt-md-0">
     {% include figure.liquid path="assets/Proj0/urban-perspective/urban2.jpg" title="arch3" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="row">
-  <div class="col-sm-4 mt-3 mt-md-0">
+  <div class="col-sm-4 mt-2 mt-md-0">
     {% include figure.liquid path="assets/Proj0/urban-perspective/urban3.jpg" title="arch4" class="img-fluid rounded z-depth-1" %}
   </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
+  <div class="col-sm-4 mt-2 mt-md-0">
     {% include figure.liquid path="assets/Proj0/urban-perspective/urban4.jpg" title="arch5" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
