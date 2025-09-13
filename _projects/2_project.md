@@ -182,4 +182,14 @@ Here are the final, processed images, which have been aligned using the L2 Norm,
   <div class="col-sm mt-3 mt-md-0 text-center">
     {% include figure.liquid path="/assets/proj1_outputs/outputs_final/three_generations_final.png" title="Three Generations" class="img-fluid rounded z-depth-1" %}
   </div>
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/camels.png" title="Camels" class="img-fluid rounded z-depth-1" %}
+  </div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/yurt.png" title=Yurt" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/palace.png" title="Palace" class="img-fluid rounded z-depth-1" %}
+  </div>
 </div>
