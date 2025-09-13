@@ -124,14 +124,14 @@ Here are more results from aligning other images from the Prokudin-Gorskii colle
   <div class="col-sm mt-3 mt-md-0 text-center">
     {% include figure.liquid path="/assets/proj1_outputs/self_portrait.png" title="Self Portrait" class="img-fluid rounded z-depth-1" %}
   </div>
-    <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/siren.png" title="Siren" class="img-fluid rounded z-depth-1" %}
+    <div class="row mt-3 align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/self_portrait.png" title="Self Portrait" class="img-fluid rounded z-depth-1" %}
   </div>
-  <div class="col-sm mt-3 mt-md-0">
-    </div>
-  <div class="col-sm mt-3 mt-md-0">
-    </div>
-</div>
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/siren.png" title="Siren" class="img-f luid rounded z-depth-1" %}
+  </div>
+  </div>
 
 ---
 
