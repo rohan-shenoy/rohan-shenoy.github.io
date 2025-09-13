@@ -1,5 +1,3 @@
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+I am a senior at UC Berkeley studying Computer Science and Applied Mathematics. For the past two years, I have worked with the [MIT Climate and Sustainability Consortium](https://climate.mit.edu/mit-climate-and-sustainability-consortium), advised by [Elsa Olivetti](https://dmse.mit.edu/people/elsa-olivetti) and [Evan Coleman](https://evancoleman.mit.edu/), on applied machine learning and large-scale computing. My academic interests lie at the intersection of machine learning, control theory, and sustainability, where I aim to develop data-driven methods that support resilient and efficient systems.
 
-Put your address / P.O. box / other info right below your picture. You can also disable any these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
-
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+Outside of academics, I enjoy skiing, soccer (as a dedicated Bayern Munich fan), backgammon and other strategy games, and puzzles.

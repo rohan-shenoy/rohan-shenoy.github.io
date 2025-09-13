@@ -1,4 +1,12 @@
-# -----------------------------------------------------------------------------
+---
+exclude:
+  - _posts/
+  - _pages/blog.md
+  - _pages/repositories.md
+  - _pages/teaching.md
+  - _pages/profiles.md
+  - _pages/dropdown.md
+...# -----------------------------------------------------------------------------
 # Site settings
 # -----------------------------------------------------------------------------
 
@@ -339,6 +347,7 @@ external_links:
   rel: external nofollow noopener
   target: _blank
   exclude:
+  
 
 # -----------------------------------------------------------------------------
 # Responsive WebP Images
