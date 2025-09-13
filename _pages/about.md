@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: From games to life, always seeking the next move.
+subtitle: 
 
 profile:
   align: left
@@ -24,6 +24,6 @@ latest_posts:
   limit: 3 # leave blank to include all the blog posts
 ---
 
-I am a senior at UC Berkeley studying Computer Science and Applied Mathematics. For the past two years, I have worked with the [MIT Climate and Sustainability Consortium](https://climate.mit.edu/mit-climate-and-sustainability-consortium), advised by [Elsa Olivetti](https://dmse.mit.edu/people/elsa-olivetti) and [Evan Coleman](https://evancoleman.mit.edu/), on applied machine learning and large-scale computing. My academic interests lie at the intersection of machine learning, control theory, and sustainability, where I aim to develop data-driven methods that support resilient and efficient systems.
+I am a senior at UC Berkeley studying Computer Science and Applied Mathematics. For the past two years, I have worked with the [MIT Climate and Sustainability Consortium](https://impactclimate.mit.edu/), advised by [Elsa Olivetti](https://dmse.mit.edu/people/faculty/elsa-a-olivetti/) and [Evan Coleman](https://eacoleman.github.io/), on applied machine learning and large-scale computing. My academic interests lie at the intersection of machine learning, control theory, and sustainability, where I aim to develop data-driven methods that support resilient and efficient systems.
 
 Outside of academics, I enjoy skiing, soccer (as a dedicated Bayern Munich fan), backgammon and other strategy games, and puzzles.
