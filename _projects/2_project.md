@@ -43,16 +43,14 @@ The simplest approach to creating a color image is to split the three channels a
 
 ### Single-Scale Alignment
 
-To fix the misalignment, we can use a single-scale alignment algorithm. This method performs an exhaustive search over a small pixel window, shifting one channel relative to a reference channel. The best alignment is the displacement that maximizes the similarity (or minimizes the difference) between the two channels, according to a chosen distance metric.
+To fix the misalignment, we can use a single-scale alignment algorithm. This method performs an exhaustive search over a small pixel window, shifting one channel relative to a reference channel. The best alignment is the displacement that maximizes the similarity between the two channels, according to a chosen distance metric. We use two primary distance metrics:
 
-We use two primary distance metrics:
-
-1.  **L2 Norm (Sum of Squared Differences):** This metric calculates the direct Euclidean distance between the pixel values of two images. It's fast but sensitive to overall brightness differences. The formula is:
+1.  **L2 Norm (Sum of Squared Differences):** This metric calculates the direct Euclidean distance between the pixel values of two images. It's fast but sensitive to overall brightness differences.
     $$ L_2 = \sqrt{\sum_{i=1}^{n}(u_i - v_i)^2} $$
-2.  **Normalized Cross-Correlation (NCC):** This metric is more robust to linear variations in brightness and contrast. It normalizes both images by subtracting their mean and dividing by their standard deviation before comparing them. An NCC score of 1 indicates a perfect match. The formula is:
+2.  **Normalized Cross-Correlation (NCC):** This metric is more robust to linear variations in brightness and contrast. It normalizes both images before comparing them.
     $$ NCC = \frac{1}{n} \sum_{i=1}^{n} \frac{(u_i - \bar{u})}{\sigma_u} \frac{(v_i - \bar{v})}{\sigma_v} $$
 
-Below are the alignment results for both the Cathedral and Emir images using both metrics.
+Below are the single-scale alignment results for the Cathedral image.
 
 <div class="row align-items-center">
   <div class="col-sm mt-3 mt-md-0 text-center">
@@ -61,80 +59,127 @@ Below are the alignment results for both the Cathedral and Emir images using bot
   <div class="col-sm mt-3 mt-md-0 text-center">
     {% include figure.liquid path="/assets/proj1_outputs/cathedral_ncc.png" title="Cathedral NCC" class="img-fluid rounded z-depth-1" %}
   </div>
+</div>
+<div class="caption text-center">
+  Cathedral aligned with L2 Norm (left) and Normalized Cross-Correlation (right).
+</div>
+
+---
+
+### Multi-Scale Pyramid Alignment
+
+For high-resolution images like `emir.tif`, an exhaustive search is computationally expensive. A more efficient strategy is the multi-scale image pyramid. This approach creates a series of downsampled images (a pyramid). It first finds a coarse alignment on the smallest image, then refines the search in a small window at progressively higher resolutions. This coarse-to-fine strategy is significantly faster and more effective for large displacements.
+
+<div class="row align-items-center">
   <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/emir_l2.png" title="Emir L2" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/emir_ncc.png" title="Emir NCC" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="/assets/proj1_outputs/emir.png" title="Emir Aligned" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption text-center">
-  From left to right: Cathedral aligned with L2, Cathedral with NCC, Emir with L2, and Emir with NCC.
+  The Emir image, aligned using the efficient multi-scale pyramid method.
 </div>
 
 ---
 
 ### Alignment Gallery
 
-Here are more results from aligning other images from the Prokudin-Gorskii collection using the same techniques.
+Here are more results from aligning other images from the Prokudin-Gorskii collection, displayed one per row for better visibility.
 
-<div class="row align-items-center">
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/icon.png" title="Icon" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/lastochikino.png" title="Lastochikino" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/melons.png" title="Melons" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/lugano.png" title="Lugano" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
 <div class="row mt-3 align-items-center">
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/monastery.png" title="Monastery" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/italil.png" title="Italil" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/three_generations.png" title="Three Generations" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
+  <div class="col-sm text-center">
     {% include figure.liquid path="/assets/proj1_outputs/church.png" title="Church" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="row mt-3 align-items-center">
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/tobolsk.png" title="Tobolsk" class="img-fluid rounded z-depth-1" %}
-  </div>
-    <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/emir.png" title="Emir" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/cathedral.png" title="Cathedral" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
+  <div class="col-sm text-center">
     {% include figure.liquid path="/assets/proj1_outputs/harvesters.png" title="Harvesters" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="row mt-3 align-items-center">
-  <div class="col-sm mt-3 mt-md-0 text-center">
+  <div class="col-sm text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/icon.png" title="Icon" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/melons.png" title="Melons" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/monastery.png" title="Monastery" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm text-center">
     {% include figure.liquid path="/assets/proj1_outputs/self_portrait.png" title="Self Portrait" class="img-fluid rounded z-depth-1" %}
   </div>
-    <div class="row mt-3 align-items-center">
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/self_portrait.png" title="Self Portrait" class="img-fluid rounded z-depth-1" %}
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/three_generations.png" title="Three Generations" class="img-fluid rounded z-depth-1" %}
   </div>
-  <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="/assets/proj1_outputs/siren.png" title="Siren" class="img-f luid rounded z-depth-1" %}
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/tobolsk.png" title="Tobolsk" class="img-fluid rounded z-depth-1" %}
   </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/siren.png" title="Siren" class="img-fluid rounded z-depth-1" %}
   </div>
+</div>
+
 
 ---
 
 ### Final Gallery
 
-*(Placeholder for the final gallery of best results and extra features.)*
+Here are the final, processed images, which have been aligned using the L2 Norm, enhanced with adaptive histogram equalization, and cropped by 5% to remove noisy borders. Histogram equalization is a contrast enhancement technique that redistributes the pixel intensities of an image to be as uniform as possible. It works by creating a new intensity mapping that spreads out the most frequent brightness values. The result is an image with a wider range of darks and lights, making features and textures more distinct and visible.
+
+<div class="row mt-3 align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/church_final.png" title="Church" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/emir_final.png" title="Emir" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/harvesters_final.png" title="Harvesters" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/icon_final.png" title="Icon" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/italil_final.png" title="Italil" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/lastochikino_final.png" title="Lastochikino" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/lugano_final.png" title="Lugano" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/melons_final.png" title="Melons" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/self_portrait_final.png" title="Self Portrait" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/siren_final.png" title="Siren" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="row mt-3 align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="/assets/proj1_outputs/outputs_final/three_generations_final.png" title="Three Generations" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
