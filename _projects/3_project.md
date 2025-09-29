@@ -485,7 +485,7 @@ The difference in cutoff frequencies (2.0 vs 6.0) creates a frequency gap that p
     {% include figure.liquid path="assets/proj2_results/data/allan.jpg" title="Dad's Coworker" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/2.2/pjs_allan_hybrid_result.jpg title="Dad + Coworker Hybrid" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/2.2/pjs_allan_hybrid_result.jpg" title="Dad + Coworker Hybrid" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
