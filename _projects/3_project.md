@@ -112,11 +112,11 @@ def convolve_2loops(image, kernel, padding = True):
     {% include figure.liquid path="assets/proj2_results/data/headshot.png" title="Original Image" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/1.1/box_filter_result.jpg" title="Box Filter Result" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/1.1/box_filtered_image.jpg" title="Box Filter Result" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
-  Left: Original headshot image. Right: Result after applying 9x9 box filter.
+  Left: Original headshot image. Right: Result after applying 9x9 box filter to grayscale version of headshot.
 </div>
 
 <div class="row">
@@ -132,10 +132,10 @@ def convolve_2loops(image, kernel, padding = True):
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/1.1/dx_result.jpg" title="Dx Filter" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/1.1/dx_filtered_image.jpg" title="Dx Filter" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/1.1/dy_result.jpg" title="Dy Filter" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/1.1/dy_filtered_image.jpg" title="Dy Filter" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
     {% include figure.liquid path="assets/proj2_results/1.1/gradient_magnitude.jpg" title="Gradient Magnitude" class="img-fluid rounded z-depth-1" %}
@@ -155,7 +155,7 @@ My convolution implementation handles boundaries through zero-padding when the `
 The zero-padding strategy is simple but can introduce boundary artifacts. 
 
 **Runtime Comparison:**
-As you can see in the runtime comparison, my two loop implementation of the convolution is an order of magnitude faster than the four loop convolution implementation. The scipy implementation of the operation is an order of magnitude faster than the two loop implementation, so we use that from here on out.
+As you can see in the runtime comparison, my two loop implementation of the convolution is an order of magnitude faster than the four loop convolution implementation. The scipy implementation of the operation is roughly 30x faster than the two loop implementation, so we use that from here on out.
 
 ---
 
@@ -264,6 +264,8 @@ To reduce noise in edge detection, I first blur the image with a Gaussian filter
 **Thoughts:**
 In the first approach, we begin by blurring the image and then use the finite difference operators from above. The second approach, the Derivative of Gaussian (DoG) filter approach, we convolve the 2d Gaussian kernel with the D_x/D_y kernels before convolving with the image. Because convolution is a commutative operation, we get the same results from both of these appraoches, which can be seen in the smooth gradient magnitude image vs. the DoG gradient magnitude image. Finally, we provide the binary_edges image computed from our gradient magnitude image with an intensity threshold of 35.
 
+We see that by blurring first, we pick up much less noise throughout the image (no grass, etc).
+
 ---
 
 ## Part 2: Fun with Frequencies!
@@ -283,7 +285,7 @@ The unsharp mask filter works by:
 
 #### Results on Taj Mahal
 
-We see the step by step approach in action to sharpening the details on the Taj Mahal. We start with a blurry original image, and create a low-pass-filter version that is even more blurry. Then we get the high-frequency image by subtracting the low-pass-filtered version from the original. Finally, we add some amount of the high_frequency image back to the original to get a sharpened version (alpha = 1.5 in this case).
+We see the step by step approach to sharpening the details on the Taj Mahal. We start with a blurry original image, and create a low-pass-filter version that is even more blurry. Then we get the high-frequency image by subtracting the low-pass-filtered version from the original. Finally, we add some amount of the high_frequency image back to the original to get a sharpened version (alpha = 1.5 in this case).
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
@@ -352,7 +354,7 @@ Here I try a quick experiment, in which I start with a good quality original ima
 
 ### Part 2.2: Hybrid Images
 
-Creating hybrid images that change interpretation based on viewing distance, following the approach by Oliva, Torralba, and Schyns (SIGGRAPH 2006). Here we take a low-pass-filtered image, and then a high-pass-filtered image (taken by subtracting the low-pass image from the original) and overlay them. Then we overlay them which lets us see the high-pass image from up close and then the low-pass image from a distance.
+Creating hybrid images that change interpretation based on viewing distance, following the approach by Oliva, Torralba, and Schyns (SIGGRAPH 2006). Here we take a low-pass-filtered image, and then a high-pass-filtered image (taken by subtracting the low-pass image from the original) and overlay them. After overlaying them, we can see the high-pass image from up close and then the low-pass image from a distance.
 
 #### Process Demonstration 
 
@@ -360,40 +362,40 @@ First, I'll demonstrate how the process works on two images of my cousins, who a
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/data/vip.jpg" title="Vip Original" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/data/varun.jpg" title="Varun Original" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/data/varun.jpg" title="Varun Original" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/data/vip.jpg" title="Viping Original" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
-  Left: Vip (cousin 1). Right: Varun (cousin 2).
+  Left: Varun (cousin 1). Right: Vipin (cousin 2).
 </div>
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/2.2/vipun_aligned2.jpg" title="Vip Aligned" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/2.2/vipun_aligned1.jpg" title="Varun Aligned" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/2.2/vipun_aligned1.jpg" title="Varun Aligned" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/2.2/vipun_aligned2.jpg" title="Vipin Aligned" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
-  Left: Vipin aligned. Right: Varun aligned for processing.
+  Left: Varun aligned for processing. Right: Vipin aligned for processing.
 </div>
 
 #### Frequency Analysis
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/2.2/vipun_input2_fft.jpg" title="Vipin FFT" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/2.2/vipun_input1_fft.jpg" title="Varun FFT" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/2.2/vipun_input1_fft.jpg" title="Varun FFT" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj2_results/2.2/vipun_input2_fft.jpg" title="Vipin FFT" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
-  Left: Fourier transform of Vip's aligned image. Right: Fourier transform of Varun's aligned image.
+  Left: Fourier transform of Varun's aligned image. Right: Fourier transform of Vipin's aligned image.
 </div>
 
 #### Filtered Images and Their Frequency Content
@@ -433,7 +435,7 @@ First, I'll demonstrate how the process works on two images of my cousins, who a
   </div>
 </div>
 <div class="caption">
-  Left: Final hybrid image of Vip and Varun. Right: FFT of the hybrid result.
+  Left: Final hybrid image of Vipin and Varun. Right: FFT of the hybrid result.
 </div>
 
 #### Understanding the Process
@@ -540,7 +542,11 @@ Implementing the multi-resolution blending technique from Burt and Adelson (1983
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
     {% include figure.liquid path="assets/proj2_results/2.4/oraple.png" title="Final Oraple Result" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
   </div>
 </div>
 <div class="caption">
@@ -551,32 +557,66 @@ Implementing the multi-resolution blending technique from Burt and Adelson (1983
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
     {% include figure.liquid path="assets/proj2_results/data/coffee.jpg" title="Cup of Coffee" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/data/mars.jpg" title="Mars" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj2_results/2.4/mars_coffee.jpg" title="Cup of Mars" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj2_results/data/mars.jpg" title="Mars" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj2_results/2.4/mars_coffee.jpg" title="Cup of Mars" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
     {% include figure.liquid path="assets/proj2_results/data/guinness.png" title="Guinness" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
   </div>
   <div class="col-sm mt-3 mt-md-0">
     {% include figure.liquid path="assets/proj2_results/data/street.png" title="Nighttime Street" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
     {% include figure.liquid path="assets/proj2_results/2.4/street_guinness_blend.jpg" title="Guinness Street" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
   </div>
 </div>
 <div class="caption">
   Additional examples of multi-resolution blending showing input images and their seamlessly blended results.
 </div>
-
-For the guinness image, I had to shrink the image of the street so that it would fit in the guiness. I did this by adding a large black border around the image, and made sure not to count these added pixels when computing the Gaussian filtered pyramid levels. 
 
 ---
 
