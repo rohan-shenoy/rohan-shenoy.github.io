@@ -19,10 +19,10 @@ I captured multiple sets of images with projective transformations between them 
 
 <div class="row">
   <div class="col-sm mt-2 mt-md-0">
-    {% include figure.liquid path="assets/proj3/Mosaic_1/lecture1.jpeg" title="Lecture Image 1" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj3/Mosaic_1/rlecture1.jpeg" title="Lecture Image 1" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-2 mt-md-0">
-    {% include figure.liquid path="assets/proj3/Mosaic_1/lecture2.jpeg" title="Lecture Image 2" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj3/Mosaic_1/rlecture2.jpeg" title="Lecture Image 2" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption">
@@ -99,7 +99,7 @@ Below we show the images with the correspondence points plotted on them. Below e
 
 <div class="row">
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="aassets/proj3/Mosaic_3/r1_with_points.png" title="7/11 Image 1 Correspondences Plotted" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj3/Mosaic_3/r1_with_points.png" title="7/11 Image 1 Correspondences Plotted" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
     {% include figure.liquid path="assets/proj3/Mosaic_3/r2_with_points.png" title="7/11 Image 2 Correspondences Plotted" class="img-fluid rounded z-depth-1" %}
@@ -299,7 +299,7 @@ When you simply overlay warped images, you get harsh transitions and visible sea
   </div>
 </div>
 <div class="caption">
-  Third mosaic: Three source images combined into a wide panoramic view. You can see the affect of the aforementioned translation when taking the pictures. It makes the middle parts very blurry. Going forward, I know how to best rotate my phone to prevent any translation (like the technique used in the second set of images). 
+  Third mosaic: Three source images combined into a wide panoramic view. You can see the affect of the aforementioned translation when taking the pictures. It makes the middle parts very blurry. Going forward, I know how to best rotate my phone to prevent any translation (like the technique used in the second set of images).
 </div>
 
 ---
