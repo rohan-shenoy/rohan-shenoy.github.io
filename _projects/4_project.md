@@ -317,38 +317,38 @@ I used the provided Harris corner detection implementation to identify potential
 After detecting Harris corners, I implemented Adaptive Non-Maximal Suppression (ANMS) to select a more evenly distributed subset of the strongest corners. ANMS works by suppressing corners that are not significantly stronger than their neighbors within a certain radius, resulting in a more spatially distributed set of features.
 
 #### Harris Corners Without ANMS
-<div class="image-row">
-    <div class="image-container">
-        <img src="assets/proj3/results/lemon_trees/01_IMG_3387_corners_no_anms.png" alt="Harris corners image 1">
-        <p class="caption">Left side of lemon trees Harris corners without ANMS</p>
-    </div>
-    <div class="image-container">
-        <img src="assets/proj3/results/lemon_trees/02_IMG_3389_corners_no_anms.png" alt="Harris corners image 2">
-        <p class="caption">Center of lemon trees Harris corners without ANMS</p>
-    </div>
-    <div class="image-container">
-        <img src="assets/proj3/results/lemon_trees/03_IMG_3390_corners_no_anms.png" alt="Harris corners image 3">
-        <p class="caption">Right side of lemon trees Harris corners without ANMS</p>
-    </div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/lemon_trees/01_IMG_3387_corners_no_anms.png" title="Harris corners image 1" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/lemon_trees/02_IMG_3389_corners_no_anms.png" title="Harris corners image 2" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/lemon_trees/03_IMG_3390_corners_no_anms.png" title="Harris corners image 3" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  Harris corners detected without ANMS: Left side, center, and right side of lemon trees.
 </div>
 
 #### Harris Corners With ANMS
-<div class="image-row">
-    <div class="image-container">
-        <img src="assets/proj3/results/lemon_trees/01_IMG_3387_corners_anms.png" alt="Harris corners with ANMS image 1">
-        <p class="caption">Left side of lemon trees Harris corners with ANMS</p>
-    </div>
-    <div class="image-container">
-        <img src="assets/proj3/results/lemon_trees/02_IMG_3389_corners_anms.png" alt="Harris corners with ANMS image 2">
-        <p class="caption">Center of lemon trees Harris corners with ANMS</p>
-    </div>
-    <div class="image-container">
-        <img src="assets/proj3/results/lemon_trees/03_IMG_3390_corners_anms.png" alt="Harris corners with ANMS image 3">
-        <p class="caption">Right side of lemon trees Harris corners with ANMS</p>
-    </div>
-</div>
 
-We can see how ANMS spreads out the features that are selected throughout the image. This is important when trying to compute robust homographies.
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/lemon_trees/01_IMG_3387_corners_anms.png" title="Harris corners with ANMS image 1" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/lemon_trees/02_IMG_3389_corners_anms.png" title="Harris corners with ANMS image 2" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/lemon_trees/03_IMG_3390_corners_anms.png" title="Harris corners with ANMS image 3" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  Harris corners detected with ANMS: Left side, center, and right side of lemon trees. Notice how ANMS spreads out the features throughout the image, which is important for computing robust homographies.
+</div>
 
 ### B.2: Feature Descriptor Extraction
 
@@ -365,22 +365,26 @@ Feature matching involves finding pairs of descriptors from different images tha
 For each descriptor in the first image, I compute its distance to all descriptors in the second image. A match is considered valid if the ratio of the distance to the nearest neighbor and the distance to the second nearest neighbor is below a threshold (typically 0.7-0.8). This ratio test helps reject ambiguous matches where multiple descriptors are similarly close. Below I show some example features that are extracted and match between the 7/11 image (we show the entire 40x40 patch so it is easier to visualize how the matching process occurs, but for the actual computations, we use the normalized 8x8 patches).
 
 #### Feature Matching Results
-<div class="image-row">
-    <div class="image-container">
-        <img src="assets/proj3/results/7_11_crash/feature_patches_match_01.png" alt="Feature matches between image 1 and 2">
-    </div>
-    <div class="image-container">
-        <img src="assets/proj3/results/7_11_crash/feature_patches_match_02.png" alt="Feature matches between image 2 and 3">
-    </div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/7_11_crash/feature_patches_match_01.png" title="Feature matches 1-2" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/7_11_crash/feature_patches_match_02.png" title="Feature matches 2-3" class="img-fluid rounded z-depth-1" %}
+  </div>
 </div>
 
-<div class="image-row">
-    <div class="image-container">
-        <img src="assets/proj3/results/7_11_crash/feature_patches_match_03.png" alt="Feature matches between image 3 and 4">
-    </div>
-    <div class="image-container">
-        <img src="assets/proj3/results/7_11_crash/feature_patches_match_04.png" alt="Feature matches between image 4 and 5">
-    </div>
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/7_11_crash/feature_patches_match_03.png" title="Feature matches 3-4" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/7_11_crash/feature_patches_match_04.png" title="Feature matches 4-5" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  Example feature patches that match between consecutive images in the 7/11 sequence. Each pair shows corresponding 40x40 patches that were identified as matches.
 </div>
 
 ### B.4: RANSAC for Robust Homography
