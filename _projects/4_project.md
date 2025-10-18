@@ -416,10 +416,10 @@ After many iterations, the homography with the most inliers is selected as the f
 The automatic feature-based approach produces different results compared to manual correspondence selection. While manual stitching allows for precise control over the alignment, automatic methods can sometimes capture more subtle geometric relationships. The automatic matching process is more robust when implemented correctly and is several orders of magnitudes faster (~30 seconds vs 10+ minutes). The 7/11 manual stitching is compared to the automatic cropping below:
 
 <div class="row">
-  <div class="col-sm mt-3 mt-md-0">
+  <div class="col-sm mt-2 mt-md-0">
     {% include figure.liquid path="assets/proj3/Mosaic_3/r_mosaic.jpg" title="Manual stitching result" class="img-fluid rounded z-depth-1" %}
   </div>
-  <div class="col-sm mt-3 mt-md-0">
+  <div class="col-sm mt-2 mt-md-0">
     {% include figure.liquid path="assets/proj3/results/7_11_crash/mosaic.png" title="Automatic stitching result" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
@@ -432,7 +432,7 @@ The automatic feature-based approach produces different results compared to manu
 Here are some of the mosaics I created using this automatic stitching process. I make use of some clever techniques to produce some funny images.
 
 <div class="row">
-  <div class="col-sm mt-3 mt-md-0">
+  <div class="col-sm mt-1 mt-md-0">
     {% include figure.liquid path="assets/proj3/results/clark_kerr/mosaic.png" title="Clark Kerr mosaic" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
@@ -441,7 +441,7 @@ Here are some of the mosaics I created using this automatic stitching process. I
 </div>
 
 <div class="row">
-  <div class="col-sm mt-3 mt-md-0">
+  <div class="col-sm mt-1 mt-md-0">
     {% include figure.liquid path="assets/proj3/results/home_run_mosaic/mosaic.png" title="Home run" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
@@ -450,7 +450,7 @@ Here are some of the mosaics I created using this automatic stitching process. I
 </div>
 
 <div class="row">
-  <div class="col-sm mt-3 mt-md-0">
+  <div class="col-sm mt-1 mt-md-0">
     {% include figure.liquid path="assets/proj3/results/lbnl_2/mosaic.png" title="LBNL view" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
@@ -459,7 +459,7 @@ Here are some of the mosaics I created using this automatic stitching process. I
 </div>
 
 <div class="row">
-  <div class="col-sm mt-3 mt-md-0">
+  <div class="col-sm mt-1 mt-md-0">
     {% include figure.liquid path="assets/proj3/results/lemon_trees/mosaic.png" title="Clark Kerr Lemon Trees" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
@@ -468,7 +468,7 @@ Here are some of the mosaics I created using this automatic stitching process. I
 </div>
 
 <div class="row">
-  <div class="col-sm mt-3 mt-md-0">
+  <div class="col-sm mt-1 mt-md-0">
     {% include figure.liquid path="assets/proj3/results/multi_cyp/mosaic.png" title="Multi Cyp" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
