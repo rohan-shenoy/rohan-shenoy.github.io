@@ -401,7 +401,7 @@ After many iterations, the homography with the most inliers is selected as the f
     {% include figure.liquid path="assets/proj3/results/clark_kerr/left_matches.png" title="Left Image Matching" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
-    {% include figure.liquid path="assets/proj3/results/clark_kerr/center_matches.png" title=Center Image Matching" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj3/results/clark_kerr/center_matches.png" title="Center Image Matching" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-3 mt-md-0">
     {% include figure.liquid path="assets/proj3/results/clark_kerr/right_matches.png" title="Right Image Matching" class="img-fluid rounded z-depth-1" %}
@@ -415,40 +415,63 @@ After many iterations, the homography with the most inliers is selected as the f
 
 The automatic feature-based approach produces different results compared to manual correspondence selection. While manual stitching allows for precise control over the alignment, automatic methods can sometimes capture more subtle geometric relationships. The automatic matching process is more robust when implemented correctly and is several orders of magnitudes faster (~30 seconds vs 10+ minutes). The 7/11 manual stitching is compared to the automatic cropping below:
 
-<div class="image-row">
-    <div class="image-container">
-        <img src="assets/proj3/Mosaic_3/r_mosaic.jpg" alt="Manual stitching result">
-        <p class="caption">Manual stitching result</p>
-    </div>
-    <div class="image-container">
-        <img src="assets/proj3/results/7_11_crash/mosaic.png" alt="Automatic stitching result">
-        <p class="caption">Automatic stitching result</p>
-    </div>
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/Mosaic_3/r_mosaic.jpg" title="Manual stitching result" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/7_11_crash/mosaic.png" title="Automatic stitching result" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  Left: Manual stitching result. Right: Automatic stitching result.
 </div>
 
 ### Automatic Mosaics Gallery
 
 Here are some of the mosaics I created using this automatic stitching process. I make use of some clever techniques to produce some funny images.
 
-<div class="mosaic-gallery">
-    <div class="mosaic-row">
-        <img src="assets/proj3/results/clark_kerr/mosaic.png" alt="Clark Kerr mosaic">
-        <p class="caption">View from freshman year dorm</p>
-    </div>
-    <div class="mosaic-row">
-        <img src="assets/proj3/results/home_run_mosaic/mosaic.png" alt="Home run">
-        <p class="caption">Home run!</p>
-    </div>
-    <div class="mosaic-row">
-        <img src="assets/proj3/results/lbnl_2/mosaic.png" alt="LBNL view">
-        <p class="caption">View from Lawrence Berkeley National Labs</p>
-    </div>
-    <div class="mosaic-row">
-        <img src="assets/proj3/results/lemon_trees/mosaic.png" alt="Clark Kerr Lemon Trees">
-        <p class="caption">Lemon trees at Clark Kerr</p>
-    </div>
-    <div class="mosaic-row">
-        <img src="assets/proj3/results/multi_cyp/mosaic.png" alt="Multi Cyp">
-        <p class="caption">Multi Cyp</p>
-    </div>
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/clark_kerr/mosaic.png" title="Clark Kerr mosaic" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  View from freshman year dorm
+</div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/home_run_mosaic/mosaic.png" title="Home run" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  Home run!
+</div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/lbnl_2/mosaic.png" title="LBNL view" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  View from Lawrence Berkeley National Labs
+</div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/lemon_trees/mosaic.png" title="Clark Kerr Lemon Trees" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  Lemon trees at Clark Kerr
+</div>
+
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/multi_cyp/mosaic.png" title="Multi Cyp" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  Multi Cyp
 </div>
