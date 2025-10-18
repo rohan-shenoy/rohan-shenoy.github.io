@@ -303,3 +303,152 @@ When you simply overlay warped images, you get harsh transitions and visible sea
 </div>
 
 ---
+
+## Part B: Feature Matching for Autostitching
+
+In this section, I implement the Multi-Image Matching algorithm based on the paper "Multi-Image Matching using Multi-Scale Oriented Patches" by Brown et al., with several simplifications. The goal is to automatically detect, match, and stitch images together without manual point selection as in the previous section.
+
+### B.1: Harris Corner Detection
+
+The first step involves detecting interest points using the Harris Corner Detector. Harris corners are points in an image where the intensity changes significantly in multiple directions, making them good candidates for matching across different images.
+
+I used the provided Harris corner detection implementation to identify potential interest points. The algorithm computes the Harris response function at each pixel and identifies local maxima as corner candidates.
+
+After detecting Harris corners, I implemented Adaptive Non-Maximal Suppression (ANMS) to select a more evenly distributed subset of the strongest corners. ANMS works by suppressing corners that are not significantly stronger than their neighbors within a certain radius, resulting in a more spatially distributed set of features.
+
+#### Harris Corners Without ANMS
+<div class="image-row">
+    <div class="image-container">
+        <img src="assets/proj3/results/lemon_trees/01_IMG_3387_corners_no_anms.png" alt="Harris corners image 1">
+        <p class="caption">Left side of lemon trees Harris corners without ANMS</p>
+    </div>
+    <div class="image-container">
+        <img src="assets/proj3/results/lemon_trees/02_IMG_3389_corners_no_anms.png" alt="Harris corners image 2">
+        <p class="caption">Center of lemon trees Harris corners without ANMS</p>
+    </div>
+    <div class="image-container">
+        <img src="assets/proj3/results/lemon_trees/03_IMG_3390_corners_no_anms.png" alt="Harris corners image 3">
+        <p class="caption">Right side of lemon trees Harris corners without ANMS</p>
+    </div>
+</div>
+
+#### Harris Corners With ANMS
+<div class="image-row">
+    <div class="image-container">
+        <img src="assets/proj3/results/lemon_trees/01_IMG_3387_corners_anms.png" alt="Harris corners with ANMS image 1">
+        <p class="caption">Left side of lemon trees Harris corners with ANMS</p>
+    </div>
+    <div class="image-container">
+        <img src="assets/proj3/results/lemon_trees/02_IMG_3389_corners_anms.png" alt="Harris corners with ANMS image 2">
+        <p class="caption">Center of lemon trees Harris corners with ANMS</p>
+    </div>
+    <div class="image-container">
+        <img src="assets/proj3/results/lemon_trees/03_IMG_3390_corners_anms.png" alt="Harris corners with ANMS image 3">
+        <p class="caption">Right side of lemon trees Harris corners with ANMS</p>
+    </div>
+</div>
+
+We can see how ANMS spreads out the features that are selected throughout the image. This is important when trying to compute robust homographies.
+
+### B.2: Feature Descriptor Extraction
+
+Once interest points are detected, the next step is to extract distinctive feature descriptors around each corner. These descriptors capture the local appearance of the image region and enable matching between different images.
+
+For each detected corner, I extract an 8x8 patch from a larger 40x40 window around the interest point. The larger window is first blurred to reduce noise and then sampled down to create the 8x8 descriptor. This approach provides better stability and distinctiveness compared to directly sampling the 8x8 patch.
+
+The extracted descriptors are then normalized using bias and gain normalization to make them invariant to illumination changes. Bias normalization removes the mean, and gain normalization scales the descriptor to unit variance. This preprocessing step is crucial for robust matching across images with different lighting conditions.
+
+### B.3: Feature Matching
+
+Feature matching involves finding pairs of descriptors from different images that are likely to correspond to the same physical point in the scene. I use the nearest neighbor distance ratio test proposed by Lowe to identify good matches.
+
+For each descriptor in the first image, I compute its distance to all descriptors in the second image. A match is considered valid if the ratio of the distance to the nearest neighbor and the distance to the second nearest neighbor is below a threshold (typically 0.7-0.8). This ratio test helps reject ambiguous matches where multiple descriptors are similarly close. Below I show some example features that are extracted and match between the 7/11 image (we show the entire 40x40 patch so it is easier to visualize how the matching process occurs, but for the actual computations, we use the normalized 8x8 patches).
+
+#### Feature Matching Results
+<div class="image-row">
+    <div class="image-container">
+        <img src="assets/proj3/results/7_11_crash/feature_patches_match_01.png" alt="Feature matches between image 1 and 2">
+    </div>
+    <div class="image-container">
+        <img src="assets/proj3/results/7_11_crash/feature_patches_match_02.png" alt="Feature matches between image 2 and 3">
+    </div>
+</div>
+
+<div class="image-row">
+    <div class="image-container">
+        <img src="assets/proj3/results/7_11_crash/feature_patches_match_03.png" alt="Feature matches between image 3 and 4">
+    </div>
+    <div class="image-container">
+        <img src="assets/proj3/results/7_11_crash/feature_patches_match_04.png" alt="Feature matches between image 4 and 5">
+    </div>
+</div>
+
+### B.4: RANSAC for Robust Homography
+
+The final step involves computing a robust homography transformation using RANSAC (Random Sample Consensus). Even with the ratio test, some feature matches will be incorrect (outliers). RANSAC helps identify the largest set of consistent matches (inliers) and computes the homography from these reliable correspondences.
+
+The 4-point RANSAC algorithm works by repeatedly:
+1. Randomly selecting 4 point correspondences
+2. Computing a homography from these 4 points
+3. Evaluating how many other correspondences are consistent with this homography (within a small error threshold)
+4. Keeping track of the homography with the most inliers
+
+After many iterations, the homography with the most inliers is selected as the final transformation. This approach is robust to outliers and can handle situations where up to 50% of the matches are incorrect.
+
+#### RANSAC Inlier Detection
+<div class="row">
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/clark_kerr/left_matches.png" title="Left Image Matching" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/clark_kerr/center_matches.png" title=Center Image Matching" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-3 mt-md-0">
+    {% include figure.liquid path="assets/proj3/results/clark_kerr/right_matches.png" title="Right Image Matching" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+<div class="caption">
+  The matching points plotted on the clark kerr images.
+</div>
+
+#### Manual vs Automatic Stitching Comparison
+
+The automatic feature-based approach produces different results compared to manual correspondence selection. While manual stitching allows for precise control over the alignment, automatic methods can sometimes capture more subtle geometric relationships. The automatic matching process is more robust when implemented correctly and is several orders of magnitudes faster (~30 seconds vs 10+ minutes). The 7/11 manual stitching is compared to the automatic cropping below:
+
+<div class="image-row">
+    <div class="image-container">
+        <img src="assets/proj3/Mosaic_3/r_mosaic.jpg" alt="Manual stitching result">
+        <p class="caption">Manual stitching result</p>
+    </div>
+    <div class="image-container">
+        <img src="assets/proj3/results/7_11_crash/mosaic.png" alt="Automatic stitching result">
+        <p class="caption">Automatic stitching result</p>
+    </div>
+</div>
+
+### Automatic Mosaics Gallery
+
+Here are some of the mosaics I created using this automatic stitching process. I make use of some clever techniques to produce some funny images.
+
+<div class="mosaic-gallery">
+    <div class="mosaic-row">
+        <img src="assets/proj3/results/clark_kerr/mosaic.png" alt="Clark Kerr mosaic">
+        <p class="caption">View from freshman year dorm</p>
+    </div>
+    <div class="mosaic-row">
+        <img src="assets/proj3/results/home_run_mosaic/mosaic.png" alt="Home run">
+        <p class="caption">Home run!</p>
+    </div>
+    <div class="mosaic-row">
+        <img src="assets/proj3/results/lbnl_2/mosaic.png" alt="LBNL view">
+        <p class="caption">View from Lawrence Berkeley National Labs</p>
+    </div>
+    <div class="mosaic-row">
+        <img src="assets/proj3/results/lemon_trees/mosaic.png" alt="Clark Kerr Lemon Trees">
+        <p class="caption">Lemon trees at Clark Kerr</p>
+    </div>
+    <div class="mosaic-row">
+        <img src="assets/proj3/results/multi_cyp/mosaic.png" alt="Multi Cyp">
+        <p class="caption">Multi Cyp</p>
+    </div>
+</div>
