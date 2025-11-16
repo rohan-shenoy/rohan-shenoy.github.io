@@ -182,6 +182,37 @@ Finally, here is the 3d reconstruction on the lego dataset:
   </div>
 </div>
 
+Same things for my stadium dataset. The only hyperparameter changes was changing the near to 0.04 and the far to 0.8, computed by trial and error:
+
+<div class="row align-items-center">
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/1.png" title="Iteration 50" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/2.png" title="Iteration 400" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/3.png" title="Iteration 1000" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/4.png" title="Iteration 2000" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/5.png" title="Iteration 5000" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+
+<div class="row align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/my_data_psnr.png" title="PSNR curve" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+
+<div class="row align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/orbit_iter_5000 (1).gif" title="3D view" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
 
 
 
