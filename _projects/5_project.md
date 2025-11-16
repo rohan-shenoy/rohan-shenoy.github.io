@@ -177,7 +177,7 @@ Here is the validation PSNR. Ignore the title and legend.
 Finally, here is the 3d reconstruction on the lego dataset:
 
 <div class="row align-items-center">
-  <div class="col-sm mt-3 mt-md-0 text-center">
+  <div class="col-sm mt-3 mt-md-3 text-center">
     {% include figure.liquid path="assets/proj4_deliverables/nerf_spherical_render_z.gif" title="3D view" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
@@ -209,7 +209,7 @@ Same things for my stadium dataset. The only hyperparameter changes was changing
 </div>
 
 <div class="row align-items-center">
-  <div class="col-sm mt-3 mt-md-0 text-center">
+  <div class="col-sm mt-3 mt-md-3 text-center">
     {% include figure.liquid path="assets/proj4_deliverables/orbit_iter_5000 (1).gif" title="3D view" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
