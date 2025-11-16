@@ -105,55 +105,48 @@ Here is a hyperparameter sweep that shows how the network size and the max posit
 
 <div class="row align-items-center">
   <div class="col-sm mt-1 mt-md-0 text-center">
-    {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_hyperparam/final_recon_grid.png" title="Architecture Diagram" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_hyperparam/final_recon_grid.png" title="Hyperparameter Sweep" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
-
-
-
 
 ---
 
 ## Part 2: Multi-view Neural Radiance Field on Lego
 
-With the Lego dataset (`lego_200x200.npz`), we parse intrinsics/focal, split images and poses, and build the ray sampler:
+Now we want to actually train a 3D NeRF to reconstruct a view of the stadium from the Part 0 dataset. We first begin by using the camera to world (c2w) matrix to write a function that takes a camera point in and transforms it into world space. We implement it in a manner that supports batched coordinates to speed up training using torch. We also implement a function that transform coordinates from the pixel coordinate system to the camera coordinate system, also support batched inputs. To do this, we multiply by the inverse w2c and intrinsic matrix K for each respective transformation. Finally, we create a function that takens in a pixel coordinate and converts it to a ray (origin and normalized direction), which we do by passing it through the aforementioned functions to have world coordinates, which can be used to compute the corresponding ray.
 
-1. **Coordinate transforms:** Implement `transform(c2w, x_c)` and `pixel_to_camera(K, uv, s)` supporting batched points.
-2. **Ray generation:** Use `pixel_to_ray(K, c2w, uv)` to produce origins/directions for every pixel, offsetting UVs by 0.5 to hit pixel centers.
-3. **Sampling:** Draw N rays per iteration (either by image batching or global flattening), sample 32–64 points uniformly between near=2.0 and far=6.0, and jitter samples for training-time perturbations.
-4. **Data loader:** Return `(ray_o, ray_d, pixel_color)` tuples, verify uv-ordering against stored images, and visualize rays/samples in Viser.
+We then build a sampling algorithm that samples M images from our training dataset, and then samples N/M rays from each image to get N rays in total. We then write a function to uniformly create some samples along the ray (64 samples taken on each ray), based on some interval [near, far]. Each sample contains the location in 3D world coordinates and the corresponding color. 
 
-The network now accepts encoded 3D positions and view directions, injects the positional encodings midway through the MLP, outputs densities (ReLU) and colors (Sigmoid), and the volume rendering implementation accumulates contributions via the discrete integral. Training aims for >23 PSNR on validation using Adam with LR ≈ 5e-4 and sampling 10k rays per step. Deliverables cover textual descriptions of each part, ray/sample visualization (≤100 rays), training progression renders, validation PSNR curve, and a spherical video rendered from the provided test cameras.
+Using these sampling functions, we build a dataloader that randomly samples pixels from the images in our dataset as created before. An important note here is we have to restrict the rays that can be sampled to be from an image in our dataset, otherwise we will just train the NeRF to predict all black as it is "learning" from rays that we do not actually have in our dataset.
 
-<div class="row">
+Here is the architecture of our 3D NeRF.
+
+<div class="row align-items-center">
   <div class="col-sm mt-3 mt-md-0 text-center">
-    {% include figure.liquid path="assets/proj4/vis/ray_samples.png" title="Ray/Sample Visualization" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj4_deliverables/Screenshot 2025-11-15 at 11.28.23 PM.png" title="Architecture Diagram" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption text-center">
-  Rays sampled from a single training image and their perturbed sample points plotted in 3D confirm the frustra stay within the camera bounds.
+  Diagram of the neural radiance field architecture.
 </div>
 
----
+Here is a visualization of the rays on the lego dataset. 
 
-## Part 2.6: Training on Personal Object Data
-
-Finally, the undistorted, pose-labeled dataset created in Part 0 is used to train a NeRF of your own object. Adjust near/far bounds (e.g., 0.02–0.5) and increase samples per ray (64) when necessary, especially for handheld scans. Save intermediate renders and loss curves, then export a GIF of a camera circling the learned scene using scripts that rotate a camera pose around the origin. Discuss any custom hyperparameters or code changes applied during this stage. Deliverables include the loss-over-iterations plot, intermediate render snapshots, a novel-view GIF, and commentary on any tuning adjustments.
-
----
-
-## Bells & Whistles (Optional)
-
-- Depth map video for the Lego scene (CS 280A requirement)
-- Advanced sampling (coarse-to-fine PDF resampling)
-- Improved representations (e.g., Instant-NGP) with citations
-- Novel background colors in the volume renderer
-- Scene contraction (Mip-NeRF 360)
-- nerfstudio-generated videos
-
-Ensure all required web-hosted screenshots, GIFs, and plots are linked from the page when available.
+<div class="row align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/Screenshot 2025-11-15 at 11.48.54 AM.png" title="Architecture Diagram" class="img-fluid rounded z-depth-1" %}
   </div>
-  <div class="col-sm-4 mt-3 mt-md-0">
-    {% include figure.liquid path="assets/img/11.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-  </div>
+</div>
+<div class="caption text-center">
+  Diagram of the neural radiance field architecture.
+</div>
+
+The last thing we implement is a function the discretely computes the value of a pixel given points along a series of rays that intersect with a pixel. This is so we can render an image from a certain direction after training the NeRF. 
+
+
+
+
+
+
+
 </div>
