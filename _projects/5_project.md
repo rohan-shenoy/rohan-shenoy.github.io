@@ -74,7 +74,7 @@ The neural network architecture is shown below. We use a learning rate of 1e-2.
 
 <div class="row align-items-center">
   <div class="col-sm mt-5 mt-md-0 text-center">
-    {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_emir/reconstruction_iter0001.png.png" title="Iteration 1" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_emir/reconstruction_iter0001.png" title="Iteration 1" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-5 mt-md-0 text-center">
     {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_emir/reconstruction_iter0200.png" title="Iteration 200" class="img-fluid rounded z-depth-1" %}
@@ -83,10 +83,10 @@ The neural network architecture is shown below. We use a learning rate of 1e-2.
     {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_emir/reconstruction_iter0400.png" title="Iteration 400" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-5 mt-md-0 text-center">
-    {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_emir/reconstruction_iter1000.png.png" title="Iteration 1000" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_emir/reconstruction_iter1000.png" title="Iteration 1000" class="img-fluid rounded z-depth-1" %}
   </div>
   <div class="col-sm mt-5 mt-md-0 text-center">
-    {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_cat/reconstruction_iter2000.png" title="Iteration 2000" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/proj4_deliverables/nerf_2d_training_emir/reconstruction_iter2000.png" title="Iteration 2000" class="img-fluid rounded z-depth-1" %}
   </div>
 </div>
 <div class="caption text-center">
@@ -143,7 +143,44 @@ Here is a visualization of the rays on the lego dataset.
 
 The last thing we implement is a function the discretely computes the value of a pixel given points along a series of rays that intersect with a pixel. This is so we can render an image from a certain direction after training the NeRF. 
 
+We start by training on the lego dataset, demonstrating the training process below.
 
+
+<div class="row align-items-center">
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/train_view0_iter_0001.png" title="Iteration 1" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/train_view0_iter_0050.png" title="Iteration 50" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/train_view0_iter_0400.png" title="Iteration 400" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/train_view0_iter_1000.png" title="Iteration 1000" class="img-fluid rounded z-depth-1" %}
+  </div>
+  <div class="col-sm mt-5 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/train_view0_iter_2000.png" title="Iteration 2000" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+
+Here is the validation PSNR. Ignore the title and legend.
+
+<div class="row align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/psnr_curve.png" title="PSNR curve" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
+
+
+
+Finally, here is the 3d reconstruction on the lego dataset:
+
+<div class="row align-items-center">
+  <div class="col-sm mt-3 mt-md-0 text-center">
+    {% include figure.liquid path="assets/proj4_deliverables/nerf_spherical_render_z.gif" title="3D view" class="img-fluid rounded z-depth-1" %}
+  </div>
+</div>
 
 
 
