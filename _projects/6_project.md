@@ -871,84 +871,92 @@ This approach is closely related to how visual anagrams work earlier in the proj
 
 ---
 
-### B.1 Unconditional Denoising UNet
+### B.1 Single-Step Denoising UNet
 
-I implemented a UNet architecture trained to denoise images corrupted by Gaussian noise.
+In this part, we will build a training pipeline and train a UNet which will be a diffusion model that creates the digits as in the MNIST dataset. We will try a few different methods and compare which works best.
+
+---
+
+### B.1.2 Training a UNet Denoiser
+
+In this section, I train a UNet to act as a denoiser by learning a direct mapping from noisy images to clean images. Given a clean MNIST digit \( x \), I generate a noisy version \( z \) by adding Gaussian noise according to
+\[
+z = x + \sigma \epsilon, \quad \epsilon \sim \mathcal{N}(0, I),
+\]
+where \( \sigma \) controls the noise level. The UNet \( D_\theta \) is trained to recover the original image by minimizing a mean squared error objective,
+\[
+\mathcal{L} = \mathbb{E}_{x,z}\big[\|D_\theta(z) - x\|^2\big].
+\]
+By visualizing the noising process for increasing values of \( \sigma \), we observe progressively stronger corruption of the image, which motivates learning a data-driven denoiser rather than relying on fixed filters.
 
 <div class="row justify-content-sm-center">
   <div class="col-sm-6 mt-3">
-    {% include figure.liquid path="assets/img/partB_uncond_epoch1.png" title="Unconditional denoising (epoch 1)" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/2_2/1.2_noisy_images.png" title="Visualizations of noise added across different sigma values." class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Visualizations of noise added across different sigma values.
+    </div>
   </div>
+</div>
+
+---
+
+### B.1.2.1 Training Pipeline
+
+In this section, I train a UNet-based denoising model to map a noisy image \( z \) back to its clean version \( x \). The training objective is to minimize the mean squared error between the network output and the clean image,
+\[
+\mathcal{L} = \mathbb{E}_{x,\epsilon}\big[\lVert D_\theta(x + \sigma \epsilon) - x \rVert^2\big],
+\]
+where noise is added according to \( z = x + \sigma \epsilon \) with \( \epsilon \sim \mathcal{N}(0, I) \). During training, noise is applied *on the fly* to each batch so that the model sees a different noisy version of the same image every epoch, improving generalization.
+
+**Hyperparameters and setup:**
+- **Dataset:** MNIST (training split only), shuffled each epoch  
+- **Noise level: \( \sigma = 0.5 \), fixed throughout training  
+- **Model:** UNet with hidden dimension \( D = 128 \)  
+- **Batch size:** 256  
+- **Optimizer:** Adam  
+- **Learning rate:** \( 1 \times 10^{-4} \)  
+- **Epochs:** 5  
+
+After training, I visualize denoising results on the test set after the 1st and 5th epochs, as well as the training loss curve over iterations. 
+
+<div class="row justify-content-sm-center">
   <div class="col-sm-6 mt-3">
-    {% include figure.liquid path="assets/img/partB_uncond_epoch5.png" title="Unconditional denoising (epoch 5)" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/2_2/2_2epoch1.png" title="Visualizations of predictions after 1 epoch" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Visualizations of predictions after 1 epoch
+    </div>
   </div>
 </div>
-
----
-
-### B.2 Training Curve
-
-I tracked the training loss across iterations to verify convergence.
-
 <div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3">
-    {% include figure.liquid path="assets/img/partB_uncond_training_curve.png" title="Training loss curve" class="img-fluid rounded z-depth-1" %}
+  <div class="col-sm-6 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/2_2/2_2epoch5.png" title="Visualizations of predictions after 5 epochs" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Visualizations of predictions after 5 epochs
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-6 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/2_2/2_2training_curve.png" title="Training Curve" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Training curve
+    </div>
   </div>
 </div>
 
 ---
 
-### B.3 Sampling from Pure Noise
+### B.1.2.2 Out-of-Distribution Testing
 
-I trained the model to map pure Gaussian noise to digit-like outputs, demonstrating how the model learns a data-centric average structure.
+In this section, I test out the model that was trained in the previous section across differnet sigma values. This will test the robustness of the model to generalize to different noise levels, despite the model only being trained for sigma = 0.5
 
 <div class="row justify-content-sm-center">
   <div class="col-sm-6 mt-3">
-    {% include figure.liquid path="assets/img/partB_pure_noise_epoch1.png" title="Pure noise sampling (epoch 1)" class="img-fluid rounded z-depth-1" %}
-  </div>
-  <div class="col-sm-6 mt-3">
-    {% include figure.liquid path="assets/img/partB_pure_noise_epoch5.png" title="Pure noise sampling (epoch 5)" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
-
----
-
-### B.4 Time-Conditioned Flow Matching
-
-I extended the UNet to condition on diffusion time, allowing it to learn a continuous velocity field that transports noise to data.
-
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3">
-    {% include figure.liquid path="assets/img/partB_time_training_curve.png" title="Time-conditioned training curve" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/2_2/2_2ood_denoising.png" title="Visualizations of model predictions across different sigma values" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Visualizations of model predictions across different sigma values.
+    </div>
   </div>
 </div>
 
 ---
-
-### B.5 Class-Conditional Flow Matching
-
-I further extended the model to condition on digit labels using classifier-free guidance, enabling controlled generation.
-
-<div class="row justify-content-sm-center">
-  <div class="col-sm-8 mt-3">
-    {% include figure.liquid path="assets/img/partB_class_training_curve.png" title="Class-conditional training curve" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
-
----
-
-### B.6 Class-Conditional Sampling
-
-Finally, I sampled from the trained class-conditional model, generating four samples per digit (0–9).
-
-<div class="row justify-content-sm-center">
-  <div class="col-sm-12 mt-3">
-    {% include figure.liquid path="assets/img/partB_class_samples_epoch10.png" title="Class-conditional samples (4 per class)" class="img-fluid rounded z-depth-1" %}
-  </div>
-</div>
-
----
-
-## Conclusion
-
-This project demonstrates how diffusion models can be both *used* as powerful generative tools and *constructed* from first principles. By incrementally building from unconditional denoising to time- and class-conditioned flow matching, I gained a deeper understanding of how modern diffusion systems achieve controllable, high-quality generation.
