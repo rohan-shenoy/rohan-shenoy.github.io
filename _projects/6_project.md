@@ -69,15 +69,15 @@ To begin, I wrote some prompts out and that used a prompt encoder to generate th
 
 A core component of diffusion models is the forward diffusion process, which gradually adds noise to a clean image where the noise is Gaussian distributed. Formally, the forward process defines a conditional distribution
 
-\[
+$$
 q(x_t \mid x_0) = \mathcal{N}\!\left(x_t;\, \sqrt{\bar{\alpha}_t}\, x_0,\ (1-\bar{\alpha}_t)I\right),
-\]
+$$
 
 which can be equivalently written as
 
-\[
+$$
 x_t = \sqrt{\bar{\alpha}_t}\, x_0 + \sqrt{1-\bar{\alpha}_t}\,\epsilon,\quad \epsilon \sim \mathcal{N}(0, I).
-\]
+$$
 
 Here, \(x_0\) is the original clean image, \(x_t\) is the noisy image at timestep \(t\), and \(\bar{\alpha}_t\) is a precomputed noise schedule that decreases monotonically with \(t\). As \(t\) increases, the signal term \(\sqrt{\bar{\alpha}_t}x_0\) diminishes while the noise term dominates, causing the image to become progressively more corrupted. I implement this forward process to visualize how information is destroyed over time and to generate training data for the reverse denoising model, which learns to invert this corruption process by predicting clean structure from noisy inputs. We visualize this process below on an image of the Berkeley Campanile.
 
@@ -162,9 +162,9 @@ As a baseline comparison to diffusion-based denoising, we apply classical Gaussi
 
 In this section, we leverage a pretrained diffusion model to denoise images corrupted with Gaussian noise. Specifically, we use the Stage I UNet from DeepFloyd IF, which has been trained on a massive dataset of noisy–clean image pairs to predict the noise component added at a given timestep \( t \). Given a noisy image \( x_t \), the model estimates the noise \( \epsilon_\theta(x_t, t) \), conditioned both on the timestep and a text prompt embedding (here fixed to *“a high quality photo”*). Using the forward diffusion equation, the clean image estimate is then recovered via  
 
-\[
+$$
 \hat{x}_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}\left(x_t - \sqrt{1 - \bar{\alpha}_t}\,\epsilon_\theta(x_t, t)\right),
-\]
+$$
 
 which correctly rescales the predicted noise rather than subtracting it directly. For timesteps \( t \in \{250, 500, 750\} \), we apply the forward process to add noise, pass the noisy images through the pretrained UNet to estimate noise, and reconstruct an approximation of the original image. 
 
@@ -220,9 +220,9 @@ which correctly rescales the predicted noise rather than subtracting it directly
 
 In Part 1.3, we used the diffusion forward-process equation to perform one-step denoising. Given a noisy image \( x_t \) at timestep \( t \), the pretrained UNet predicts the noise \( \epsilon_\theta(x_t, t) \), which we then use to estimate the clean image \( x_0 \) via
 
-\[
+$$
 \hat{x}_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}\left(x_t - \sqrt{1 - \bar{\alpha}_t}\,\epsilon_\theta(x_t, t)\right).
-\]
+$$
 
 This equation gives a direct projection onto the clean image manifold, but it works best only when the noise level is moderate. As \( t \) increases and the image becomes noisier, the estimate degrades.
 
@@ -230,14 +230,14 @@ In this section, we go further by denoising iteratively, which is what diffusion
 
 The update rule for one reverse step is:
 
-\[
+$$
 x_{t'} = 
 \frac{\sqrt{\bar{\alpha}_{t'}}\,\beta_t}{1 - \bar{\alpha}_t}\,\hat{x}_0
 \;+\;
 \frac{\sqrt{\alpha_t}(1 - \bar{\alpha}_{t'})}{1 - \bar{\alpha}_t}\,x_t
 \;+\;
 v_\sigma,
-\]
+$$
 
 where:
 - \( x_t \) is the current noisy image,
@@ -363,9 +363,9 @@ While the images produced in the previous section no longer resemble pure noise,
 
 CFG works by combining two noise predictions at each denoising step: one conditional prediction \( \epsilon_c \), which uses the text prompt embedding, and one unconditional prediction \( \epsilon_u \), which is obtained by passing a null (empty) prompt to the model. These two predictions are then combined as
 
-\[
+$$
 \epsilon = \epsilon_u + \gamma(\epsilon_c - \epsilon_u),
-\]
+$$
 
 where \( \gamma \) is the guidance scale. When \( \gamma = 0 \), sampling is fully unconditional, and when \( \gamma = 1 \), it is equivalent to standard conditional sampling. The key improvement comes from setting \( \gamma > 1 \), which amplifies features that are strongly aligned with the text prompt, producing sharper and more coherent images.
 
@@ -563,9 +563,9 @@ Inpainting is the task of filling in missing or masked regions of an image in a 
 
 Given an original image \( x_{\text{orig}} \) and a binary mask \( m \), where \( m = 1 \) indicates regions to edit and \( m = 0 \) indicates regions to preserve, we run the diffusion denoising loop as usual. However, after each denoising step, we explicitly enforce that pixels outside the mask remain faithful to the original image. This is done by replacing those pixels with the appropriately noised version of the original image at timestep \( t \):
 
-\[
+$$
 x_t \leftarrow m \cdot x_t + (1 - m)\cdot \text{forward}(x_{\text{orig}}, t).
-\]
+$$
 
 Intuitively, this operation leaves the masked region free for the model to modify while “locking in” the unmasked region to match the original image with the correct noise level. As the denoising process progresses, the diffusion model fills in the masked region in a way that is consistent with both the surrounding pixels and the learned image manifold.
 
@@ -784,15 +784,15 @@ The key idea is to guide the denoising process using two different text prompts 
 - \( \epsilon_2 \): obtained by flipping the image upside down, denoising it with prompt \( p_2 \), and then flipping the predicted noise back.
 
 Formally, the procedure at timestep \( t \) is:
-\[
+$$
 \epsilon_1 = \text{CFG}(\text{UNet}(x_t, t, p_1)),
-\]
-\[
+$$
+$$
 \epsilon_2 = \text{flip}\big(\text{CFG}(\text{UNet}(\text{flip}(x_t), t, p_2))\big),
-\]
-\[
+$$
+$$
 \epsilon = \frac{\epsilon_1 + \epsilon_2}{2}.
-\]
+$$
 
 The averaged noise estimate \( \epsilon \) is then used in the reverse diffusion update. This forces the generated image to satisfy both prompt constraints simultaneously—one in the original orientation and one in the flipped orientation.
 
@@ -880,13 +880,13 @@ In this part, we will build a training pipeline and train a UNet which will be a
 ### B.1.2 Training a UNet Denoiser
 
 In this section, I train a UNet to act as a denoiser by learning a direct mapping from noisy images to clean images. Given a clean MNIST digit \( x \), I generate a noisy version \( z \) by adding Gaussian noise according to
-\[
+$$
 z = x + \sigma \epsilon, \quad \epsilon \sim \mathcal{N}(0, I),
-\]
+$$
 where \( \sigma \) controls the noise level. The UNet \( D_\theta \) is trained to recover the original image by minimizing a mean squared error objective,
-\[
+$$
 \mathcal{L} = \mathbb{E}_{x,z}\big[\|D_\theta(z) - x\|^2\big].
-\]
+$$
 By visualizing the noising process for increasing values of \( \sigma \), we observe progressively stronger corruption of the image, which motivates learning a data-driven denoiser rather than relying on fixed filters.
 
 <div class="row justify-content-sm-center">
@@ -903,9 +903,9 @@ By visualizing the noising process for increasing values of \( \sigma \), we obs
 ### B.1.2.1 Training Pipeline
 
 In this section, I train a UNet-based denoising model to map a noisy image \( z \) back to its clean version \( x \). The training objective is to minimize the mean squared error between the network output and the clean image,
-\[
+$$
 \mathcal{L} = \mathbb{E}_{x,\epsilon}\big[\lVert D_\theta(x + \sigma \epsilon) - x \rVert^2\big],
-\]
+$$
 where noise is added according to \( z = x + \sigma \epsilon \) with \( \epsilon \sim \mathcal{N}(0, I) \). During training, noise is applied *on the fly* to each batch so that the model sees a different noisy version of the same image every epoch, improving generalization.
 
 **Hyperparameters and setup:**
@@ -948,13 +948,44 @@ After training, I visualize denoising results on the test set after the 1st and 
 
 ### B.1.2.2 Out-of-Distribution Testing
 
-In this section, I test out the model that was trained in the previous section across differnet sigma values. This will test the robustness of the model to generalize to different noise levels, despite the model only being trained for sigma = 0.5
+In this section, I test out the model that was trained in the previous section across differnet sigma values. This will test the robustness of the model to generalize to different noise levels, despite the model only being trained for sigma = 0.5.
 
 <div class="row justify-content-sm-center">
   <div class="col-sm-6 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/2_2/2_2ood_denoising.png" title="Visualizations of model predictions across different sigma values" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Visualizations of model predictions across different sigma values.
+    </div>
+  </div>
+</div>
+
+---
+
+### B.1.2.2 Denousing Pure Noise
+
+Now I retry the training process, howoever, this time I input pure noise into the model to denoise it. Since I use MSE loss, the model will learn to output the image the is closest to all images in the data set. This will make the model learn to output something that looks like an eight, with a weaker bottom left side. This is because if we trace a heat map of all the numbers in the dataset, they will overlap in most parts, but the least in the bottom left part of the "eight".
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-6 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/2_2/2_3_Pure_Noise_Epoch1.png" title="Visualizations of predictions after 1 epoch" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Visualizations of predictions after 1 epoch
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-6 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/2_2/2_3_Pure_Noise_Epoch5.png" title="Visualizations of predictions after 5 epochs" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Visualizations of predictions after 5 epochs
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-6 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/2_2/2_2training_curve.png" title="Training Curve" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Training curve
     </div>
   </div>
 </div>
