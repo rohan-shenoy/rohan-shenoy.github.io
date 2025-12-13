@@ -416,43 +416,43 @@ In this section, we do the same process, but on images I drew by hand and one im
 
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i1_256.png" title="Avocado w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Avocado w/ i_start=1
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i3_256.png" title="Avocado w/ i_start=3" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Avocado w/ i_start=3
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i5_256.png" title="Avocado w/ i_start=5" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Avocado w/ i_start=5
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i7_256.png" title="Avocado w/ i_start=7" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Avocado w/ i_start=7
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i10_256.png" title="Avocado w/ i_start=10" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Avocado w/ i_start=10
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i20_256.png" title="Avocado w/ i_start=20" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Avocado w/ i_start=20
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/avocado_1.7.2.png" title="Original" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Original Avocado
@@ -461,43 +461,43 @@ In this section, we do the same process, but on images I drew by hand and one im
 </div>
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i1_256.png" title="Drawing 1 w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 1 w/ i_start=1
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i3_256.png" title="Drawing 1 w/ i_start=3" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 1 w/ i_start=3
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i5_256.png" title="Drawing 1 w/ i_start=5" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 1 w/ i_start=5
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i7_256.png" title="Drawing 1 w/ i_start=7" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 1 w/ i_start=7
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i10_256.png" title="Drawing 1 w/ i_start=10" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 1 w/ i_start=10
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i20_256.png" title="Drawing 1 w/ i_start=20" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 1 w/ i_start=20
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_handdrawn_raw.png" title="Original" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Original Drawing 1
@@ -506,43 +506,43 @@ In this section, we do the same process, but on images I drew by hand and one im
 </div>
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i1_256.png" title="Drawing 2 w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 2 w/ i_start=1
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i3_256.png" title="Drawing 2 w/ i_start=3" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 2 w/ i_start=3
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i5_256.png" title="Drawing 2 w/ i_start=5" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 2 w/ i_start=5
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i7_256.png" title="Drawing 2 w/ i_start=7" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 2 w/ i_start=7
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i10_256.png" title="Drawing 2 w/ i_start=10" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 2 w/ i_start=10
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i20_256.png" title="Drawing 2 w/ i_start=20" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Drawing 2 w/ i_start=20
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_handdrawn_raw2.png" title="Original" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Original Drawing 2
@@ -639,43 +639,43 @@ In this section, we apply inpainting to the Campanile and 2 other imags by maski
 In this section, I do the same procedure as in SDEdit, but I guide the project with a specified text prompt rather than using "a high quality photo". The prompts I use in this section are "a rocket ship" starting with the Campanile, "a chair growing leaves" starting with a chair in the woods, and "beer smoking a cigarette" starting with a woman smoking, respectively.
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket1_256.png" title="Rocket ship w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Rocket ship w/ i_start=1
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket3_256.png" title="Rocket ship w/ i_start=3" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Rocket ship w/ i_start=3
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket5_256.png" title="Rocket ship w/ i_start=5" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Rocket ship w/ i_start=5
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket7_256.png" title="Rocket ship w/ i_start=7" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Rocket ship w/ i_start=7
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket10_256.png" title="Rocket ship w/ i_start=10" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Rocket ship w/ i_start=10
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket20_256.png" title="Rocket ship w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Rocket ship w/ i_start=20
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2campinelle_original.png" title="Original" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Original Campanile
@@ -684,43 +684,43 @@ In this section, I do the same procedure as in SDEdit, but I guide the project w
 </div>
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i1_256.png" title="Leafy Chair w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       A Chair Growing Leaves w/ i_start=1
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i3_256.png" title="Leafy Chair w/ i_start=3" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       A Chair Growing Leaves w/ i_start=3
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i5_256.png" title="Leafy Chair w/ i_start=5" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       A Chair Growing Leaves w/ i_start=5
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i7_256.png" title="Leafy Chair w/ i_start=7" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       A Chair Growing Leaves w/ i_start=7
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i10_256.png" title="Leafy Chair w/ i_start=10" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       A Chair Growing Leaves w/ i_start=10
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i20_256.png" title="Leafy Chair w/ i_start=20" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       A Chair Growing Leaves w/ i_start=20
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair.png" title="Original" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Original Starting Image of a Chair in Leaves
@@ -729,43 +729,43 @@ In this section, I do the same procedure as in SDEdit, but I guide the project w
 </div>
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i1_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Beer Smoking a Cigarette w/ i_start=1
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i3_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Beer Smoking a Cigarette w/ i_start=3
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i5_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Beer Smoking a Cigarette w/ i_start=5
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i7_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Beer Smoking a Cigarette w/ i_start=7
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i10_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Beer Smoking a Cigarette w/ i_start=10
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i20_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Beer Smoking a Cigarette w/ i_start=20
     </div>
   </div>
-  <div class="col-sm-1 mt-3">
+  <div class="col-sm-2 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3smoking.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Original Starting Image of a Woman Smoking
