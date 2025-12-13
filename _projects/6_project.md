@@ -8,13 +8,13 @@ related_publications: false
 ---
 
 This project explores the power of diffusion models. The project is divided into two parts:  
-**Part A** investigates the capabilities of large pretrained diffusion models for image generation and editing, while in **Part B** we develop and train our own diffusion model on the MNIST dataset.
+Part A investigates the capabilities of large pretrained diffusion models for image generation and editing, while in Part B we develop and train our own diffusion model on the MNIST dataset.
 
 ---
 
 ## Part A: The Power of Diffusion Models
 
-In Part A, I use the pretrained **DeepFloyd IF**, a large text-to-image diffusion model, to experiment with diffusion.
+In Part A, I use the pretrained DeepFloyd IF, a large text-to-image diffusion model, to experiment with diffusion.
 
 ### A.0 Playing with DeepFloyd IF
 To begin, I wrote some prompts out and that used a prompt encoder to generate the respective prompt embeddings. We then pass these prompt embeddings through the model to see the outputs. For the below prompts, we use "boots filled with flower", "a chair growing leaves", and "beer smoking a cigarette". We set num_inference to 10 (top row) and 50 (bottom row). All randomization was seeded with seed 42.
@@ -66,7 +66,7 @@ To begin, I wrote some prompts out and that used a prompt encoder to generate th
 
 ### A.1.1 Forward Process
 
-A core component of diffusion models is the **forward diffusion process**, which gradually adds noise to a clean image where the noise is Gaussian distributed. Formally, the forward process defines a conditional distribution
+A core component of diffusion models is the forward diffusion process, which gradually adds noise to a clean image where the noise is Gaussian distributed. Formally, the forward process defines a conditional distribution
 
 \[
 q(x_t \mid x_0) = \mathcal{N}\!\left(x_t;\, \sqrt{\bar{\alpha}_t}\, x_0,\ (1-\bar{\alpha}_t)I\right),
@@ -217,15 +217,15 @@ which correctly rescales the predicted noise rather than subtracting it directly
 
 ### Iterative Denoising with Strided Timesteps
 
-In Part 1.3, we used the diffusion forward-process equation to perform **one-step denoising**. Given a noisy image \( x_t \) at timestep \( t \), the pretrained UNet predicts the noise \( \epsilon_\theta(x_t, t) \), which we then use to estimate the clean image \( x_0 \) via
+In Part 1.3, we used the diffusion forward-process equation to perform one-step denoising. Given a noisy image \( x_t \) at timestep \( t \), the pretrained UNet predicts the noise \( \epsilon_\theta(x_t, t) \), which we then use to estimate the clean image \( x_0 \) via
 
 \[
 \hat{x}_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}\left(x_t - \sqrt{1 - \bar{\alpha}_t}\,\epsilon_\theta(x_t, t)\right).
 \]
 
-This equation gives a **direct projection onto the clean image manifold**, but it works best only when the noise level is moderate. As \( t \) increases and the image becomes noisier, the estimate degrades.
+This equation gives a direct projection onto the clean image manifold, but it works best only when the noise level is moderate. As \( t \) increases and the image becomes noisier, the estimate degrades.
 
-In this section, we go further by **denoising iteratively**, which is what diffusion models are fundamentally designed to do. Rather than jumping directly from \( x_t \) to \( x_0 \), we step backward through time: from a noisier timestep \( t \) to a slightly less noisy timestep \( t' < t \). To make this efficient, we use a **strided schedule** of timesteps instead of all 1000 steps.
+In this section, we go further by denoising iteratively, which is what diffusion models are fundamentally designed to do. Rather than jumping directly from \( x_t \) to \( x_0 \), we step backward through time: from a noisier timestep \( t \) to a slightly less noisy timestep \( t' < t \). To make this efficient, we use a strided schedule of timesteps instead of all 1000 steps.
 
 The update rule for one reverse step is:
 
@@ -245,9 +245,9 @@ where:
 - \( \bar{\alpha}_t \) comes from the cumulative noise schedule,
 - \( v_\sigma \) is additional stochastic noise (predicted by the model).
 
-Conceptually, this equation **interpolates between the noisy image \( x_t \) and the clean estimate \( \hat{x}_0 \)**, gradually removing noise over multiple steps.  
+Conceptually, this equation interpolates between the noisy image \( x_t \) and the clean estimate \( \hat{x}_0 \), gradually removing noise over multiple steps.  
 
-So while Part 1.3 gave us the clean-image estimate equation, this section embeds that estimate into an **iterative reverse diffusion process**, which produces much higher-quality results—especially at high noise levels.
+So while Part 1.3 gave us the clean-image estimate equation, this section embeds that estimate into an iterative reverse diffusion process, which produces much higher-quality results—especially at high noise levels.
 
 
 <div class="row justify-content-sm-center">
@@ -358,9 +358,9 @@ Instead of using the diffusion model to denoise starting from some original imag
 
 ### A.1.6 Classifier Free Guidance (CFG)
 
-While the images produced in the previous section no longer resemble pure noise, they still lack sharp structure and often fail to depict clearly recognizable objects. This is a common issue when sampling from diffusion models using only a single conditional signal. To significantly improve image quality—at the cost of reduced diversity—we apply **Classifier-Free Guidance (CFG)**.
+While the images produced in the previous section no longer resemble pure noise, they still lack sharp structure and often fail to depict clearly recognizable objects. This is a common issue when sampling from diffusion models using only a single conditional signal. To significantly improve image quality—at the cost of reduced diversity—we apply Classifier-Free Guidance (CFG).
 
-CFG works by combining two noise predictions at each denoising step: one **conditional** prediction \( \epsilon_c \), which uses the text prompt embedding, and one **unconditional** prediction \( \epsilon_u \), which is obtained by passing a null (empty) prompt to the model. These two predictions are then combined as
+CFG works by combining two noise predictions at each denoising step: one conditional prediction \( \epsilon_c \), which uses the text prompt embedding, and one unconditional prediction \( \epsilon_u \), which is obtained by passing a null (empty) prompt to the model. These two predictions are then combined as
 
 \[
 \epsilon = \epsilon_u + \gamma(\epsilon_c - \epsilon_u),
@@ -368,7 +368,7 @@ CFG works by combining two noise predictions at each denoising step: one **condi
 
 where \( \gamma \) is the guidance scale. When \( \gamma = 0 \), sampling is fully unconditional, and when \( \gamma = 1 \), it is equivalent to standard conditional sampling. The key improvement comes from setting \( \gamma > 1 \), which amplifies features that are strongly aligned with the text prompt, producing sharper and more coherent images.
 
-To implement CFG, we modify the iterative denoising loop so that the UNet is evaluated **twice per timestep**—once with the conditional prompt embedding and once with an unconditional (null) embedding. The combined noise estimate is then used in the reverse diffusion update, while the variance term is taken from the conditional prediction.
+To implement CFG, we modify the iterative denoising loop so that the UNet is evaluated twice per timestep—once with the conditional prompt embedding and once with an unconditional (null) embedding. The combined noise estimate is then used in the reverse diffusion update, while the variance term is taken from the conditional prediction.
 
 Using CFG with a guidance scale of \( \gamma = 7 \) and the prompt *“a high quality photo”*, we observe a dramatic improvement in visual fidelity compared to unguided sampling. This technique forms the foundation for stronger conditioning strategies used in later sections, including more expressive prompts, visual anagrams, and hybrid images.
 
@@ -560,7 +560,7 @@ In this section, we do the same process, but on images I drew by hand and one im
 
 Inpainting is the task of filling in missing or masked regions of an image in a way that is visually consistent with the surrounding content. Using diffusion models, we can perform inpainting by slightly modifying the standard denoising process, following the ideas from the RePaint algorithm.
 
-Given an original image \( x_{\text{orig}} \) and a binary mask \( m \), where \( m = 1 \) indicates regions to edit and \( m = 0 \) indicates regions to preserve, we run the diffusion denoising loop as usual. However, after each denoising step, we explicitly enforce that pixels **outside the mask** remain faithful to the original image. This is done by replacing those pixels with the appropriately noised version of the original image at timestep \( t \):
+Given an original image \( x_{\text{orig}} \) and a binary mask \( m \), where \( m = 1 \) indicates regions to edit and \( m = 0 \) indicates regions to preserve, we run the diffusion denoising loop as usual. However, after each denoising step, we explicitly enforce that pixels outside the mask remain faithful to the original image. This is done by replacing those pixels with the appropriately noised version of the original image at timestep \( t \):
 
 \[
 x_t \leftarrow m \cdot x_t + (1 - m)\cdot \text{forward}(x_{\text{orig}}, t).
@@ -776,9 +776,9 @@ In this section, I do the same procedure as in SDEdit, but I guide the project w
 
 ### A.1.8 Visual Anagrams with Diffusion Models
 
-In this section, we create **visual anagrams**—optical illusions where a single image conveys two different meanings depending on how it is viewed. Using diffusion models, we can construct an image that appears as one concept when upright, but reveals a completely different interpretation when flipped upside down.
+In this section, we create visual anagrams—optical illusions where a single image conveys two different meanings depending on how it is viewed. Using diffusion models, we can construct an image that appears as one concept when upright, but reveals a completely different interpretation when flipped upside down.
 
-The key idea is to guide the denoising process using **two different text prompts simultaneously**. At each diffusion step, we compute two noise estimates:
+The key idea is to guide the denoising process using two different text prompts simultaneously. At each diffusion step, we compute two noise estimates:
 - \( \epsilon_1 \): obtained by denoising the image normally using prompt \( p_1 \),
 - \( \epsilon_2 \): obtained by flipping the image upside down, denoising it with prompt \( p_2 \), and then flipping the predicted noise back.
 
@@ -793,7 +793,7 @@ Formally, the procedure at timestep \( t \) is:
 \epsilon = \frac{\epsilon_1 + \epsilon_2}{2}.
 \]
 
-The averaged noise estimate \( \epsilon \) is then used in the reverse diffusion update. This forces the generated image to satisfy **both prompt constraints simultaneously**—one in the original orientation and one in the flipped orientation.
+The averaged noise estimate \( \epsilon \) is then used in the reverse diffusion update. This forces the generated image to satisfy both prompt constraints simultaneously—one in the original orientation and one in the flipped orientation.
 
 As a result, the final image lies at an intersection of two semantic manifolds: when viewed normally, it aligns with prompt \( p_1 \), and when flipped upside down, it aligns with prompt \( p_2 \).
 
@@ -844,66 +844,26 @@ As a result, the final image lies at an intersection of two semantic manifolds: 
 
 ### A.1.9 Hybrid Images
 
-In this section, we create **visual anagrams**—optical illusions where a single image conveys two different meanings depending on how it is viewed. Using diffusion models, we can construct an image that appears as one concept when upright, but reveals a completely different interpretation when flipped upside down.
+### Hybrid Images via Factorized Diffusion
 
-The key idea is to guide the denoising process using **two different text prompts simultaneously**. At each diffusion step, we compute two noise estimates:
-- \( \epsilon_1 \): obtained by denoising the image normally using prompt \( p_1 \),
-- \( \epsilon_2 \): obtained by flipping the image upside down, denoising it with prompt \( p_2 \), and then flipping the predicted noise back.
+In this part of the project, I generate hybrid images using a diffusion-based technique known as factorized diffusion. The goal is to create a single image that encodes two different semantic concepts at different spatial frequency bands—one that dominates at low frequencies and another that appears primarily at high frequencies. As a result, the image can be interpreted differently depending on viewing distance or resolution.
 
-Formally, the procedure at timestep \( t \) is:
-\[
-\epsilon_1 = \text{CFG}(\text{UNet}(x_t, t, p_1)),
-\]
-\[
-\epsilon_2 = \text{flip}\big(\text{CFG}(\text{UNet}(\text{flip}(x_t), t, p_2))\big),
-\]
-\[
-\epsilon = \frac{\epsilon_1 + \epsilon_2}{2}.
-\]
+The method works by leveraging the diffusion model’s noise prediction mechanism. At each denoising step, I compute two classifier-free guided noise estimates using two different text prompts. One noise estimate is filtered with a low-pass Gaussian blur to retain only coarse, global structure, while the other is filtered with a high-pass operation to retain fine details. These two filtered noise signals are then added together to form a composite noise estimate, which is used in the reverse diffusion update.
 
-The averaged noise estimate \( \epsilon \) is then used in the reverse diffusion update. This forces the generated image to satisfy **both prompt constraints simultaneously**—one in the original orientation and one in the flipped orientation.
-
-As a result, the final image lies at an intersection of two semantic manifolds: when viewed normally, it aligns with prompt \( p_1 \), and when flipped upside down, it aligns with prompt \( p_2 \).
+This approach is closely related to how visual anagrams work earlier in the project: instead of enforcing consistency under spatial transformations like flipping, hybrid images enforce consistency across frequency decompositions. By controlling which prompt influences which frequency band, the diffusion process produces images that smoothly fuse two semantic interpretations into a single coherent output. The result demonstrates how diffusion models can be guided not just semantically, but also structurally, by manipulating the noise they remove at each step.
 
 <div class="row justify-content-sm-center">
   <div class="col-sm-4 mt-3">
-    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_oil_painting_flipped_256.png" title="An Oil Painting of an Old Man" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_9/1.9_pencil_painting_256.png" title="A Pencil Tip + People Camping" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      An Oil Painting of an Old Man
-    </div>
-  </div>
-  <div class="col-sm-4 mt-3">
-    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_oil_painting_256.png" title="An Oil Painting of People around a Campfire" class="img-fluid rounded z-depth-1" %}
-    <div class="caption">
-      An Oil Painting of People around a Campfire
+      A Pencil Tip + People Camping
     </div>
   </div>
 </div>
-<div class="row justify-content-sm-center">
-  <div class="col-sm-4 mt-3">
-    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_skull_256.png" title="A Skull" class="img-fluid rounded z-depth-1" %}
+<div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_9/1.9_rocket_waterfall_256.png" title="A Rocket Ship + Waterfall" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Skull
-    </div>
-  </div>
-  <div class="col-sm-4 mt-3">
-    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_skull_flipped_256.png" title="An Oil Painting of a Village in the Mountains" class="img-fluid rounded z-depth-1" %}
-    <div class="caption">
-      An Oil Painting of a Village in the Mountains
-    </div>
-  </div>
-</div>
-<div class="row justify-content-sm-center">
-  <div class="col-sm-4 mt-3">
-    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_goldfish_coast.png" title="The Amalfi Coast" class="img-fluid rounded z-depth-1" %}
-    <div class="caption">
-      The Amalfi Coast
-    </div>
-  </div>
-  <div class="col-sm-4 mt-3">
-    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_goldfish_coast_flipped_256.png" title="A Goldfish in a Wine Glass" class="img-fluid rounded z-depth-1" %}
-    <div class="caption">
-      A Goldfish in a Wine Glass
+      A Rocket Ship + Waterfall
     </div>
   </div>
 </div>
