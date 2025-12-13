@@ -358,41 +358,350 @@ Instead of using the diffusion model to denoise starting from some original imag
 
 ### A.1.6 Classifier Free Guidance (CFG)
 
-Instead of using the diffusion model to denoise starting from some original image, in this part, I use the model starting with complete noise. Below is 5 examples of the prompt "a high quality photo", where we take i_start = 0. This is picking some random image in the image manifold based on the randomized starting noise. 
+While the images produced in the previous section no longer resemble pure noise, they still lack sharp structure and often fail to depict clearly recognizable objects. This is a common issue when sampling from diffusion models using only a single conditional signal. To significantly improve image quality—at the cost of reduced diversity—we apply **Classifier-Free Guidance (CFG)**.
+
+CFG works by combining two noise predictions at each denoising step: one **conditional** prediction \( \epsilon_c \), which uses the text prompt embedding, and one **unconditional** prediction \( \epsilon_u \), which is obtained by passing a null (empty) prompt to the model. These two predictions are then combined as
+
+\[
+\epsilon = \epsilon_u + \gamma(\epsilon_c - \epsilon_u),
+\]
+
+where \( \gamma \) is the guidance scale. When \( \gamma = 0 \), sampling is fully unconditional, and when \( \gamma = 1 \), it is equivalent to standard conditional sampling. The key improvement comes from setting \( \gamma > 1 \), which amplifies features that are strongly aligned with the text prompt, producing sharper and more coherent images.
+
+To implement CFG, we modify the iterative denoising loop so that the UNet is evaluated **twice per timestep**—once with the conditional prompt embedding and once with an unconditional (null) embedding. The combined noise estimate is then used in the reverse diffusion update, while the variance term is taken from the conditional prediction.
+
+Using CFG with a guidance scale of \( \gamma = 7 \) and the prompt *“a high quality photo”*, we observe a dramatic improvement in visual fidelity compared to unguided sampling. This technique forms the foundation for stronger conditioning strategies used in later sections, including more expressive prompts, visual anagrams, and hybrid images.
 
 
 <div class="row justify-content-sm-center">
   <div class="col-sm-5 mt-5">
-    {% include figure.liquid path="assets/cs180_proj5/1_5/1.5_sample_1.png" title="Sample 1" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_6/1.6_cfg_sample_1.png" title="Sample 1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Sample 1
+      CFG Sample 1
     </div>
   </div>
   <div class="col-sm-5 mt-5">
-    {% include figure.liquid path="assets/cs180_proj5/1_5/1.5_sample_2.png" title="Sample 2" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_6/1.6_cfg_sample_2.png" title="Sample 2" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Sample 2
+      CFG Sample 2
     </div>
   </div>
   <div class="col-sm-5 mt-5">
-    {% include figure.liquid path="assets/cs180_proj5/1_5/1.5_sample_3.png" title="Sample 3" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_6/1.6_cfg_sample_3.png" title="Sample 3" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Sample 3
+      CFG Sample 3
     </div>
   </div>
   <div class="col-sm-5 mt-5">
-    {% include figure.liquid path="assets/cs180_proj5/1_5/1.5_sample_4.png" title="Sample 4" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_6/1.6_cfg_sample_4.png" title="Sample 4" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Sample 4
+      CFG Sample 4
     </div>
   </div>
   <div class="col-sm-5 mt-5">
-    {% include figure.liquid path="assets/cs180_proj5/1_5/1.5_sample_1.png" title="Sample 5" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_6/1.6_cfg_sample_5.png" title="Sample 5" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Sample 5
+      CFG Sample 5
     </div>
   </div>
 </div>
+</div>
+
+---
+
+### A.1.7.1 Editing Hand-Drawn and Web Images
+
+In this section, we do the same process, but on images I drew by hand and one image from the internet.
+
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i1_256.png" title="Avocado w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Avocado w/ i_start=1
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i3_256.png" title="Avocado w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Avocado w/ i_start=3
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i5_256.png" title="Avocado w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Avocado w/ i_start=5
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i7_256.png" title="Avocado w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Avocado w/ i_start=7
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i10_256.png" title="Avocado w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Avocado w/ i_start=10
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i20_256.png" title="Avocado w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Avocado w/ i_start=20
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/avocado_1.7.2.png" title="Original" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Original Avocado
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i1_256.png" title="Drawing 1 w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 1 w/ i_start=1
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i3_256.png" title="Drawing 1 w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 1 w/ i_start=3
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i5_256.png" title="Drawing 1 w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 1 w/ i_start=5
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i7_256.png" title="Drawing 1 w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 1 w/ i_start=7
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i10_256.png" title="Drawing 1 w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 1 w/ i_start=10
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i20_256.png" title="Drawing 1 w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 1 w/ i_start=20
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_handdrawn_raw.png" title="Original" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Original Drawing 1
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i1_256.png" title="Drawing 2 w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 2 w/ i_start=1
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i3_256.png" title="Drawing 2 w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 2 w/ i_start=3
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i5_256.png" title="Drawing 2 w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 2 w/ i_start=5
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i7_256.png" title="Drawing 2 w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 2 w/ i_start=7
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i10_256.png" title="Drawing 2 w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 2 w/ i_start=10
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i20_256.png" title="Drawing 2 w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Drawing 2 w/ i_start=20
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_1/1.7_handdrawn_raw2.png" title="Original" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Original Drawing 2
+    </div>
+  </div>
+</div>
+
+
+</div>
+
+---
+
+### A.1.7 Image to Image Translation (SDEdit)
+
+
+From this point onward, we use Classifier-Free Guidance (CFG) to improve image quality during sampling. In this section, I explore image-to-image translation using diffusion models, which enables edits tp existing images rather than generating them entirely from noise.
+
+The core idea is simple: instead of starting the diffusion process from pure noise, we begin with a real image, add a controlled amount of noise, and then denoise it using the diffusion model. The amount of noise determines how drastic the edit will be—small noise levels preserve most of the original structure, while larger noise levels allow the model to make more significant changes. This works because the denoising process forces the noisy image back onto the manifold of natural images, requiring the model to “hallucinate” missing details in a way consistent with the learned data distribution.
+
+This procedure follows the SDEdit algorithm. Concretely, we first apply the forward diffusion process to the original image (e.g., the Campanile) to reach a chosen timestep. Then, starting from that noisy image, we run the iterative denoising process with CFG, using a conditional text prompt (here, *“a high quality photo”*). By varying the starting timestep—using indices such as \([1, 3, 5, 7, 10, 20]\)—we obtain a sequence of edits that gradually transition from heavily modified images back toward the original.
+
+The result is a smooth spectrum of image edits: at low noise levels, the output closely resembles the original image, while at higher noise levels, the model introduces more creative changes. This same procedure can be applied to other input images, demonstrating how diffusion models can be used as powerful, flexible tools for controlled image editing.
+
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i1_256.png" title="Campanile w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile w/ i_start=1
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i3_256.png" title="Campanile w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile w/ i_start=3
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i5_256.png" title="Campanile w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile w/ i_start=5
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i7_256.png" title="Campanile w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile w/ i_start=7
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i10_256.png" title="Campanile w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile w/ i_start=10
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i20_256.png" title="Campanile w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile w/ i_start=20
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2campinelle_original.png" title="Original" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Original Campanile
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i1_256.png" title="Landscape w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Landscape w/ i_start=1
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i3_256.png" title="Landscape w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Landscape w/ i_start=3
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i5_256.png" title="Landscape w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Landscape w/ i_start=5
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i7_256.png" title="Landscape w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Landscape w/ i_start=7
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i10_256.png" title="Landscape w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile w/ i_start=10
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i20_256.png" title="Landscape w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Landscape w/ i_start=20
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/landscape.png" title="Original" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Original Landscape
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i1_256.png" title="Temple w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Temple w/ i_start=1
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i3_256.png" title="Temple w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Temple w/ i_start=3
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i5_256.png" title="Temple w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Temple w/ i_start=5
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i7_256.png" title="Temple w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Temple w/ i_start=7
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i10_256.png" title="Temple w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Temple w/ i_start=10
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i20_256.png" title="Temple w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Temple w/ i_start=20
+    </div>
+  </div>
+  <div class="col-sm-7 mt-7">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/temple.jpg" title="Original" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Temple Landscape
+    </div>
+  </div>
+</div>
+
+
 </div>
 
 ---
