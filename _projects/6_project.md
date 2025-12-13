@@ -142,13 +142,13 @@ As a baseline comparison to diffusion-based denoising, we apply classical Gaussi
     </div>
   </div>
   <div class="col-sm-3 mt-3">
-    {% include figure.liquid path="assets/img/partA_hybrid_high_freq.png" title="Denoised 500 step Campanile" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_2/1.2_denoised_500.png" title="Denoised 500 step Campanile" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Classically denoised version (500 steps)
     </div>
   </div>
   <div class="col-sm-3 mt-3">
-    {% include figure.liquid path="assets/img/partA_hybrid_high_freq.png" title="High-frequency image" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_2/1.2_denoised_750.png" title="High-frequency image" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Classically denoised version (750 steps)
     </div>
@@ -554,53 +554,124 @@ In this section, we do the same process, but on images I drew by hand and one im
 
 ---
 
-### A.1.7 Image to Image Translation (SDEdit)
+### A.1.7.2 Inpainting
 
+### Inpainting with Diffusion Models (RePaint)
 
-From this point onward, we use Classifier-Free Guidance (CFG) to improve image quality during sampling. In this section, I explore image-to-image translation using diffusion models, which enables edits tp existing images rather than generating them entirely from noise.
+Inpainting is the task of filling in missing or masked regions of an image in a way that is visually consistent with the surrounding content. Using diffusion models, we can perform inpainting by slightly modifying the standard denoising process, following the ideas from the RePaint algorithm.
 
-The core idea is simple: instead of starting the diffusion process from pure noise, we begin with a real image, add a controlled amount of noise, and then denoise it using the diffusion model. The amount of noise determines how drastic the edit will be—small noise levels preserve most of the original structure, while larger noise levels allow the model to make more significant changes. This works because the denoising process forces the noisy image back onto the manifold of natural images, requiring the model to “hallucinate” missing details in a way consistent with the learned data distribution.
+Given an original image \( x_{\text{orig}} \) and a binary mask \( m \), where \( m = 1 \) indicates regions to edit and \( m = 0 \) indicates regions to preserve, we run the diffusion denoising loop as usual. However, after each denoising step, we explicitly enforce that pixels **outside the mask** remain faithful to the original image. This is done by replacing those pixels with the appropriately noised version of the original image at timestep \( t \):
 
-This procedure follows the SDEdit algorithm. Concretely, we first apply the forward diffusion process to the original image (e.g., the Campanile) to reach a chosen timestep. Then, starting from that noisy image, we run the iterative denoising process with CFG, using a conditional text prompt (here, *“a high quality photo”*). By varying the starting timestep—using indices such as \([1, 3, 5, 7, 10, 20]\)—we obtain a sequence of edits that gradually transition from heavily modified images back toward the original.
+\[
+x_t \leftarrow m \cdot x_t + (1 - m)\cdot \text{forward}(x_{\text{orig}}, t).
+\]
 
-The result is a smooth spectrum of image edits: at low noise levels, the output closely resembles the original image, while at higher noise levels, the model introduces more creative changes. This same procedure can be applied to other input images, demonstrating how diffusion models can be used as powerful, flexible tools for controlled image editing.
+Intuitively, this operation leaves the masked region free for the model to modify while “locking in” the unmasked region to match the original image with the correct noise level. As the denoising process progresses, the diffusion model fills in the masked region in a way that is consistent with both the surrounding pixels and the learned image manifold.
 
+In this section, we apply inpainting to the Campanile and 2 other imags by masking out its top portion and allowing the diffusion model—guided by CFG—to generate new content in that region. We also experiment with inpainting on additional images using custom masks. Because diffusion models are being used outside of their original training distribution, multiple sampling runs may be needed to obtain a visually pleasing result.
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2campinelle_original.png" title="Campanile" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile
+    </div>
+  </div>
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2campinelle_mask_applied.png" title="Infilled section" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Infilled section
+    </div>
+  </div>
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2_campanile_inpaint_256.png" title="Campanile Inpainted" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Campanile Inpainted
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2_basketball.png" title="Basketball" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Basketball 
+    </div>
+  </div>
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2_mask_applied_basketball.png" title="Infilled section" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Infilled section
+    </div>
+  </div>
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2_basketball.png" title="Basketball Inpainted" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Basketball Inpainted
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2.png" title="Jump" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Jump
+    </div>
+  </div>
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2_mask_applied.png" title="Infilled section" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Infilled section
+    </div>
+  </div>
+  <div class="col-sm-3 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_2/1.7.2_jump_256.png" title="Jump Inpainted" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Jump Inpainted
+    </div>
+  </div>
+</div>
+
+---
+
+### A.1.7.3 Text-Conditional Image-to-image Translation
+
+In this section, I do the same procedure as in SDEdit, but I guide the project with a specified text prompt rather than using "a high quality photo". The prompts I use in this section are "a rocket ship" starting with the Campanile, "a chair growing leaves" starting with a chair in the woods, and "beer smoking a cigarette" starting with a woman smoking, respectively.
 
 <div class="row justify-content-sm-center">
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i1_256.png" title="Campanile w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket1_256.png" title="Rocket ship w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Campanile w/ i_start=1
+      Rocket ship w/ i_start=1
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i3_256.png" title="Campanile w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket3_256.png" title="Rocket ship w/ i_start=3" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Campanile w/ i_start=3
+      Rocket ship w/ i_start=3
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i5_256.png" title="Campanile w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket5_256.png" title="Rocket ship w/ i_start=5" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Campanile w/ i_start=5
+      Rocket ship w/ i_start=5
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i7_256.png" title="Campanile w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket7_256.png" title="Rocket ship w/ i_start=7" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Campanile w/ i_start=7
+      Rocket ship w/ i_start=7
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i10_256.png" title="Campanile w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket10_256.png" title="Rocket ship w/ i_start=10" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Campanile w/ i_start=10
+      Rocket ship w/ i_start=10
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_campanile_i20_256.png" title="Campanile w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket20_256.png" title="Rocket ship w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Campanile w/ i_start=20
+      Rocket ship w/ i_start=20
     </div>
   </div>
   <div class="col-sm-7 mt-7">
@@ -613,102 +684,229 @@ The result is a smooth spectrum of image edits: at low noise levels, the output 
 
 <div class="row justify-content-sm-center">
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i1_256.png" title="Landscape w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i1_256.png" title="Leafy Chair w/ i_start=1" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Landscape w/ i_start=1
+      A Chair Growing Leaves w/ i_start=1
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i3_256.png" title="Landscape w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i3_256.png" title="Leafy Chair w/ i_start=3" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Landscape w/ i_start=3
+      A Chair Growing Leaves w/ i_start=3
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i5_256.png" title="Landscape w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i5_256.png" title="Leafy Chair w/ i_start=5" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Landscape w/ i_start=5
+      A Chair Growing Leaves w/ i_start=5
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i7_256.png" title="Landscape w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i7_256.png" title="Leafy Chair w/ i_start=7" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Landscape w/ i_start=7
+      A Chair Growing Leaves w/ i_start=7
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i10_256.png" title="Landscape w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i10_256.png" title="Leafy Chair w/ i_start=10" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Campanile w/ i_start=10
+      A Chair Growing Leaves w/ i_start=10
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_landscape_i20_256.png" title="Landscape w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i20_256.png" title="Leafy Chair w/ i_start=20" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Landscape w/ i_start=20
+      A Chair Growing Leaves w/ i_start=20
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/landscape.png" title="Original" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair.png" title="Original" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Original Landscape
+      Original Starting Image of a Chair in Leaves
     </div>
   </div>
 </div>
 
 <div class="row justify-content-sm-center">
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i1_256.png" title="Temple w/ i_start=1" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i1_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Temple w/ i_start=1
+      Beer Smoking a Cigarette w/ i_start=1
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i3_256.png" title="Temple w/ i_start=3" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i3_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Temple w/ i_start=3
+      Beer Smoking a Cigarette w/ i_start=3
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i5_256.png" title="Temple w/ i_start=5" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i5_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Temple w/ i_start=5
+      Beer Smoking a Cigarette w/ i_start=5
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i7_256.png" title="Temple w/ i_start=7" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i7_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Temple w/ i_start=7
+      Beer Smoking a Cigarette w/ i_start=7
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i10_256.png" title="Temple w/ i_start=10" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i10_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Temple w/ i_start=10
+      Beer Smoking a Cigarette w/ i_start=10
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/1.7_temple_i20_256.png" title="Temple w/ i_start=20" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i20_256.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Temple w/ i_start=20
+      Beer Smoking a Cigarette w/ i_start=20
     </div>
   </div>
   <div class="col-sm-7 mt-7">
-    {% include figure.liquid path="assets/cs180_proj5/1_7/temple.jpg" title="Original" class="img-fluid rounded z-depth-1" %}
+    {% include figure.liquid path="assets/cs180_proj5/1_7/1_7_3/1.7.3smoking.png" title="Beer Cig" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
-      Temple Landscape
+      Original Starting Image of a Woman Smoking
     </div>
   </div>
-</div>
-
-
 </div>
 
 ---
 
-## Part B: Diffusion Models from Scratch
+### A.1.8 Visual Anagrams with Diffusion Models
 
-In Part B, I implemented and trained diffusion-style models from scratch on the MNIST dataset using **flow matching**, progressively adding time conditioning and class conditioning.
+In this section, we create **visual anagrams**—optical illusions where a single image conveys two different meanings depending on how it is viewed. Using diffusion models, we can construct an image that appears as one concept when upright, but reveals a completely different interpretation when flipped upside down.
+
+The key idea is to guide the denoising process using **two different text prompts simultaneously**. At each diffusion step, we compute two noise estimates:
+- \( \epsilon_1 \): obtained by denoising the image normally using prompt \( p_1 \),
+- \( \epsilon_2 \): obtained by flipping the image upside down, denoising it with prompt \( p_2 \), and then flipping the predicted noise back.
+
+Formally, the procedure at timestep \( t \) is:
+\[
+\epsilon_1 = \text{CFG}(\text{UNet}(x_t, t, p_1)),
+\]
+\[
+\epsilon_2 = \text{flip}\big(\text{CFG}(\text{UNet}(\text{flip}(x_t), t, p_2))\big),
+\]
+\[
+\epsilon = \frac{\epsilon_1 + \epsilon_2}{2}.
+\]
+
+The averaged noise estimate \( \epsilon \) is then used in the reverse diffusion update. This forces the generated image to satisfy **both prompt constraints simultaneously**—one in the original orientation and one in the flipped orientation.
+
+As a result, the final image lies at an intersection of two semantic manifolds: when viewed normally, it aligns with prompt \( p_1 \), and when flipped upside down, it aligns with prompt \( p_2 \).
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_oil_painting_flipped_256.png" title="An Oil Painting of an Old Man" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      An Oil Painting of an Old Man
+    </div>
+  </div>
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_oil_painting_256.png" title="An Oil Painting of People around a Campfire" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      An Oil Painting of People around a Campfire
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_skull_256.png" title="A Skull" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Skull
+    </div>
+  </div>
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_skull_flipped_256.png" title="An Oil Painting of a Village in the Mountains" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      An Oil Painting of a Village in the Mountains
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_goldfish_coast.png" title="The Amalfi Coast" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      The Amalfi Coast
+    </div>
+  </div>
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_goldfish_coast_flipped_256.png" title="A Goldfish in a Wine Glass" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      A Goldfish in a Wine Glass
+    </div>
+  </div>
+</div>
+
+---
+
+### A.1.9 Hybrid Images
+
+In this section, we create **visual anagrams**—optical illusions where a single image conveys two different meanings depending on how it is viewed. Using diffusion models, we can construct an image that appears as one concept when upright, but reveals a completely different interpretation when flipped upside down.
+
+The key idea is to guide the denoising process using **two different text prompts simultaneously**. At each diffusion step, we compute two noise estimates:
+- \( \epsilon_1 \): obtained by denoising the image normally using prompt \( p_1 \),
+- \( \epsilon_2 \): obtained by flipping the image upside down, denoising it with prompt \( p_2 \), and then flipping the predicted noise back.
+
+Formally, the procedure at timestep \( t \) is:
+\[
+\epsilon_1 = \text{CFG}(\text{UNet}(x_t, t, p_1)),
+\]
+\[
+\epsilon_2 = \text{flip}\big(\text{CFG}(\text{UNet}(\text{flip}(x_t), t, p_2))\big),
+\]
+\[
+\epsilon = \frac{\epsilon_1 + \epsilon_2}{2}.
+\]
+
+The averaged noise estimate \( \epsilon \) is then used in the reverse diffusion update. This forces the generated image to satisfy **both prompt constraints simultaneously**—one in the original orientation and one in the flipped orientation.
+
+As a result, the final image lies at an intersection of two semantic manifolds: when viewed normally, it aligns with prompt \( p_1 \), and when flipped upside down, it aligns with prompt \( p_2 \).
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_oil_painting_flipped_256.png" title="An Oil Painting of an Old Man" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      An Oil Painting of an Old Man
+    </div>
+  </div>
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_oil_painting_256.png" title="An Oil Painting of People around a Campfire" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      An Oil Painting of People around a Campfire
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_skull_256.png" title="A Skull" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Skull
+    </div>
+  </div>
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_skull_flipped_256.png" title="An Oil Painting of a Village in the Mountains" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      An Oil Painting of a Village in the Mountains
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_goldfish_coast.png" title="The Amalfi Coast" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      The Amalfi Coast
+    </div>
+  </div>
+  <div class="col-sm-4 mt-3">
+    {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_goldfish_coast_flipped_256.png" title="A Goldfish in a Wine Glass" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      A Goldfish in a Wine Glass
+    </div>
+  </div>
+</div>
 
 ---
 
