@@ -859,8 +859,7 @@ This approach is closely related to how visual anagrams work earlier in the proj
       A Pencil Tip + People Camping
     </div>
   </div>
-</div>
-<div class="col-sm-3 mt-3">
+  <div class="col-sm-3 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_9/1.9_rocket_waterfall_256.png" title="A Rocket Ship + Waterfall" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       A Rocket Ship + Waterfall
