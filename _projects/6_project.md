@@ -799,13 +799,13 @@ The averaged noise estimate $$ \epsilon $$ is then used in the reverse diffusion
 As a result, the final image lies at an intersection of two semantic manifolds: when viewed normally, it aligns with prompt $$ p_1 $$, and when flipped upside down, it aligns with prompt $$ p_2 $$.
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm- mt-3">
+  <div class="col-sm-4 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_oil_painting_flipped_256.png" title="An Oil Painting of an Old Man" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       An Oil Painting of an Old Man
     </div>
   </div>
-  <div class="col-sm-3 mt-3">
+  <div class="col-sm-4 mt-3">
     {% include figure.liquid path="assets/cs180_proj5/1_8/1.8_oil_painting_256.png" title="An Oil Painting of People around a Campfire" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       An Oil Painting of People around a Campfire
