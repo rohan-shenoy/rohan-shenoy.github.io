@@ -86,9 +86,9 @@ ninja.data = [{
           description: "Rohan Shenoy",
           section: "Projects",handler: () => {
               window.location.href = "/rohan-shenoy/projects/5_project/";
-            },},{id: "projects-project-6",
-          title: 'project 6',
-          description: "a project with no image",
+            },},{id: "projects-fun-with-diffusion-models",
+          title: 'Fun With Diffusion Models!',
+          description: "Rohan Shenoy",
           section: "Projects",handler: () => {
               window.location.href = "/rohan-shenoy/projects/6_project/";
             },},{id: "projects-project-7",
