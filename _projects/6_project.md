@@ -5,6 +5,7 @@ description: Rohan Shenoy
 importance: 6
 category: CS180
 related_publications: false
+math: true
 ---
 
 This project explores the power of diffusion models. The project is divided into two parts:  
