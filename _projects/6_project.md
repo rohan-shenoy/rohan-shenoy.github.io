@@ -1,50 +1,50 @@
 ---
 layout: page
-title: project 6
-description: a project with no image
-img:
-importance: 4
-category: fun
+title: Fun With Diffusion Models!
+description: Rohan Shenoy
+importance: 6
+category: CS180
+related_publications: false
 ---
 
-Every project has a beautiful feature showcase page.
-It's easy to include images in a flexible 3-column grid format.
-Make your photos 1/3, 2/3, or full width.
+This project explores the power of diffusion models, specifically focusing on Denoising Diffusion Probabilistic Models (DDPMs). The project is divided into two parts: first, experimenting with pre-trained diffusion models for image generation and editing, and second, implementing and training a diffusion model from scratch on the MNIST dataset.
 
-To give your project a background in the portfolio page, just add the img tag to the front matter like so:
+You can view the detailed project specifications here:
+- [Part A: The Power of Diffusion Models](https://cal-cs180.github.io/fa25/hw/proj5/parta.html)
+- [Part B: Diffusion Models from Scratch](https://cal-cs180.github.io/fa25/hw/proj5/partb.html)
 
-    ---
-    layout: page
-    title: project
-    description: a project with a background image
-    img: /assets/img/12.jpg
-    ---
+---
 
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/1.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/3.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    Caption photos easily. On the left, a road goes through a tunnel. Middle, leaves artistically fall in a hipster photoshoot. Right, in another hipster photoshoot, a lumberjack grasps a handful of pine needles.
-</div>
-<div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/5.jpg" title="example image" class="img-fluid rounded z-depth-1" %}
-    </div>
-</div>
-<div class="caption">
-    This image can also have a caption. It's like magic.
-</div>
+## Part A: The Power of Diffusion Models
 
-You can also put regular text between your rows of images.
-Say you wanted to write a little bit about your project before you posted the rest of the images.
+In the first part, I deployed DeepFloyd IF, a text-to-image diffusion model, to perform various generation tasks. Key experiments included:
+
+### Sampling Loops
+Implementing the denoising loop manually to understand how noise is iteratively removed to form an image.
+
+### Inpainting
+Using a mask to guide the diffusion process, allowing for the replacement of specific parts of an image while keeping the rest consistent.
+
+### Visual Anagrams & Hybrid Images
+Creating optical illusions by denoising an image such that it looks like one prompt when upright and another when flipped, or combining low and high frequencies of two different prompts.
+
+### ControlNet
+Utilizing ControlNet to guide generation with structural constraints like Canny edges.
+
+---
+
+## Part B: Diffusion Models from Scratch
+
+The second part involved building the architecture for a diffusion model and training it.
+
+### UNet Architecture
+Implemented a UNet-based noise predictor with time-conditioning to predict noise at various timesteps.
+
+### Training on MNIST
+Trained the model to generate handwritten digits by reversing the diffusion process.
+
+### Class Conditioning
+Extended the model to accept class labels, allowing for the targeted generation of specific digits (0-9).
 You describe how you toiled, sweated, _bled_ for your project, and then... you reveal its glory in the next row of images.
 
 <div class="row justify-content-sm-center">
