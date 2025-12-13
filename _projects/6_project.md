@@ -889,7 +889,7 @@ $$
 By visualizing the noising process for increasing values of $$ \sigma $$, we observe progressively stronger corruption of the image, which motivates learning a data-driven denoiser rather than relying on fixed filters.
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-8 mt-1">
     {% include figure.liquid path="assets/cs180_proj5/2_2/1.2_noisy_images.png" title="Visualizations of noise added across different sigma values." class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Visualizations of noise added across different sigma values.
@@ -919,7 +919,7 @@ where noise is added according to $$ z = x + \sigma \epsilon $$ with $$ \epsilon
 After training, I visualize denoising results on the test set after the 1st and 5th epochs, as well as the training loss curve over iterations. 
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-4 mt-2">
     {% include figure.liquid path="assets/cs180_proj5/2_2/2_2epoch1.png" title="Visualizations of predictions after 1 epoch" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Visualizations of predictions after 1 epoch
@@ -927,7 +927,7 @@ After training, I visualize denoising results on the test set after the 1st and 
   </div>
 </div>
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-4 mt-2">
     {% include figure.liquid path="assets/cs180_proj5/2_2/2_2epoch5.png" title="Visualizations of predictions after 5 epochs" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Visualizations of predictions after 5 epochs
@@ -935,7 +935,7 @@ After training, I visualize denoising results on the test set after the 1st and 
   </div>
 </div>
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-8 mt-1">
     {% include figure.liquid path="assets/cs180_proj5/2_2/2_2training_curve.png" title="Training Curve" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Training curve
@@ -950,7 +950,7 @@ After training, I visualize denoising results on the test set after the 1st and 
 In this section, I test out the model that was trained in the previous section across differnet sigma values. This will test the robustness of the model to generalize to different noise levels, despite the model only being trained for sigma = 0.5.
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-8 mt-1">
     {% include figure.liquid path="assets/cs180_proj5/2_2/2_2ood_denoising.png" title="Visualizations of model predictions across different sigma values" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Visualizations of model predictions across different sigma values.
@@ -965,7 +965,7 @@ In this section, I test out the model that was trained in the previous section a
 Now I retry the training process, howoever, this time I input pure noise into the model to denoise it. Since I use MSE loss, the model will learn to output the image the is closest to all images in the data set. This will make the model learn to output something that looks like an eight, with a weaker bottom left side. This is because if we trace a heat map of all the numbers in the dataset, they will overlap in most parts, but the least in the bottom left part of the "eight".
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-4 mt-2">
     {% include figure.liquid path="assets/cs180_proj5/2_2/2_3_Pure_Noise_Epoch1.png" title="Visualizations of predictions after 1 epoch" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Visualizations of predictions after 1 epoch
@@ -973,7 +973,7 @@ Now I retry the training process, howoever, this time I input pure noise into th
   </div>
 </div>
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-4 mt-2">
     {% include figure.liquid path="assets/cs180_proj5/2_2/2_3_Pure_Noise_Epoch5.png" title="Visualizations of predictions after 5 epochs" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Visualizations of predictions after 5 epochs
@@ -981,7 +981,7 @@ Now I retry the training process, howoever, this time I input pure noise into th
   </div>
 </div>
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-8 mt-1">
     {% include figure.liquid path="assets/cs180_proj5/2_2/2_2training_curve.png" title="Training Curve" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Training curve
@@ -999,17 +999,139 @@ In the previous section, we saw that one-step denoising alone is insufficient fo
 
 ### B.2.2 Training the Time Conditioned UNet
 
-To enable time conditioning in the UNet, we inject the scalar timestep \( t \in [0,1] \) directly into the network so that its predictions depend explicitly on where the input lies along the noise–data trajectory. Intuitively, the model needs to behave very differently when the image is close to pure noise versus when it is nearly clean, and time conditioning provides this context. We implement this by passing the normalized timestep through small fully connected blocks (FCBlocks) that map the scalar \( t \) to channel-wise modulation vectors. These vectors are then used to *scale* intermediate feature maps inside the UNet—specifically after the bottleneck “unflatten” stage and in the decoder—so the network’s activations are multiplicatively adjusted based on time. Rather than predicting the clean image directly, the time-conditioned UNet learns a time-dependent flow field that tells us how to move from a noisy sample toward the data manifold, making time conditioning essential for accurate iterative generation.
+To enable time conditioning in the UNet, we inject the scalar timestep $$ t \in [0,1] $$ directly into the network so that its predictions depend explicitly on where the input lies along the noise–data trajectory. Intuitively, the model needs to behave very differently when the image is close to pure noise versus when it is nearly clean, and time conditioning provides this context. We implement this by passing the normalized timestep through small fully connected blocks (FCBlocks) that map the scalar $$ t $$ to channel-wise modulation vectors. These vectors are then used to *scale* intermediate feature maps inside the UNet—specifically after the bottleneck “unflatten” stage and in the decoder—so the network’s activations are multiplicatively adjusted based on time. Rather than predicting the clean image directly, the time-conditioned UNet learns a time-dependent flow field that tells us how to move from a noisy sample toward the data manifold, making time conditioning essential for accurate iterative generation.
+
+To train the time-conditioned UNet, we follow a simple flow-matching procedure. For each training step, we sample a clean MNIST image $$ x_1 $$ and a random timestep $$ t \sim \text{Uniform}(0,1) $$. We then generate an intermediate noisy image $$ x_t $$ by interpolating between pure noise and the clean image, and compute the target **flow** $$ u(x_t, t) = x_1 - x_0 $$, which represents the direction the model should move to reach the data manifold. The time-conditioned UNet takes $$ (x_t, t) $$ as input and is trained to predict this flow using a mean squared error loss. Crucially, noise is added *on the fly* when batches are fetched so the model sees different noisy versions of the same image across epochs. We train on the MNIST training set using a UNet with hidden dimension $$ D=64 $$, the Adam optimizer with an initial learning rate of $$10^{-2}$$, and an exponential learning rate decay applied once per epoch. The result is a model that learns a time-dependent vector field guiding samples from noise toward clean digits, which we monitor using a training loss curve over the full training process.
 
 
 
 <div class="row justify-content-sm-center">
-  <div class="col-sm-6 mt-3">
+  <div class="col-sm-8 mt-1">
     {% include figure.liquid path="assets/cs180_proj5/3_2/2.2_training_curve.png" title="Training Curve" class="img-fluid rounded z-depth-1" %}
     <div class="caption">
       Training curve
     </div>
   </div>
 </div>
+
+---
+
+### B.2.3 Sampling from the UNet
+
+After training, we can use the time-conditioned UNet as a generative model by running the *reverse diffusion process*. Sampling begins from pure Gaussian noise $$ x_T \sim \mathcal{N}(0, I) $$ and iteratively denoises the image over timesteps $$ t = T, \dots, 1 $$. At each step, the UNet takes the current noisy image $$ x_t $$ and the normalized timestep $$ t $$ as input and predicts the **flow** (i.e., the direction that moves the image toward a cleaner version). Using this predicted flow, we update the image to obtain $$ x_{t-1} $$, gradually removing noise. Repeating this process produces increasingly structured images. As expected, samples improve as training progresses: early-epoch models (e.g., epoch 1) produce noisy or incomplete digits, while later checkpoints (epochs 5 and 10) generate much clearer results. However, notice that many of the digits are not actual digits, and just form digit like shapes.
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_3/2.3_samples_epoch_1.png" title="Epoch 1" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 1
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_3/2.3_samples_epoch_5.png" title="Epoch 5" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 5
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_3/2.3_samples_epoch_10.png" title="Epoch 10" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 10
+    </div>
+  </div>
+</div>
+
+---
+
+### B.2.5 Class Conditioning
+
+To gain finer control over the generation process, we extend the time-conditioned UNet to also condition on the digit class $$ c \in \{0,\dots,9\} $$. Instead of representing $$ c $$ as a scalar, we encode it as a one-hot vector and inject it into the network using additional fully connected blocks (FCBlocks), analogous to time conditioning. Concretely, both the time variable $$ t $$ and class vector $$ c $$ are embedded via learned linear projections and used to *modulate* intermediate feature maps through affine transformations of the form $$ \text{feature} \leftarrow c_i \cdot \text{feature} + t_i $$. This allows the UNet to adapt its denoising behavior based on both noise level and desired class. To preserve the ability to sample unconditionally and enable classifier-free guidance, we randomly drop the class conditioning vector with probability $$ p_{\text{uncond}} = 0.1 $$ during training by setting it to zero. 
+
+The training process is the same as the time-only, but we occasionally do unconditional generation. In the first training loop, we use a learning rate scheduler: torch.optim.lr_scheduler.ExponentialLR. In the second loop, we attempt to avoid the learning rate scheduler, and to make up for the increased training overhead, we drop the learning rate to 0.003 from 0.01.
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-8 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_5/2.5_training_curve.png" title="Training curve with learning rate scheduler" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Training curve with learning rate scheduler
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-8 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_5/2.5_no_lr_training_curve.png" title="Training curve without learning rate scheduler" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Training curve without learning rate scheduler
+    </div>
+  </div>
+</div>
+
+---
+
+### B.2.6 Class Conditioning Sampling
+
+To sample from the class-conditioned UNet, we start from pure Gaussian noise and iteratively denoise using the reverse diffusion process, conditioning on both the timestep $$ t $$ and a target digit class $$ c $$. At each timestep, we perform **classifier-free guidance (CFG)** by evaluating the UNet twice: once with the class condition $$ c $$ and once with the class condition dropped (i.e., unconditional). These two predicted flows are combined as
+
+$$
+v = v_{\text{uncond}} + \gamma \bigl(v_{\text{cond}} - v_{\text{uncond}}\bigr),
+$$
+
+where $$ \gamma $$ is the guidance scale. This amplifies class-specific features while still leveraging the model’s learned unconditional prior. The guided flow is then used to update the noisy image according to the reverse diffusion update rule, stepping from timestep $$ t $$ to $$ t-1 $$. Repeating this process over all timesteps gradually transforms noise into a digit that strongly matches the specified class. By adjusting $$ \gamma $$, we can trade off diversity for fidelity: larger values produce clearer, more class-consistent digits.
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_6/2.6_samples_epoch_1.png" title="Epoch 1 Samples" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 1 Samples with learning rate scheduler
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_6/2.6_samples_epoch_5.png" title="Epoch 5 Samples" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 5 Samples with learning rate scheduler
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_6/2.6_samples_epoch_10.png" title="Epoch 10 Samples" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 10 Samples with learning rate scheduler
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_1.png" title="Epoch 1 Samples" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 1 Samples without learning rate scheduler
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_5.png" title="Epoch 5 Samples" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 5 Samples without learning rate scheduler
+    </div>
+  </div>
+</div>
+<div class="row justify-content-sm-center">
+  <div class="col-sm-10 mt-1">
+    {% include figure.liquid path="assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_10.png" title="Epoch 10 Samples" class="img-fluid rounded z-depth-1" %}
+    <div class="caption">
+      Epoch 10 Samples without learning rate scheduler
+    </div>
+  </div>
+</div>
+
+As we can see, training without the learning rate scheduler did not significantly impact performance (this can also be seen in the training curve).
 
 ---
