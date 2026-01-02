@@ -8,6 +8,7 @@ profile:
   align: left
   image: headshot.jpg
   image_circular: false # crops the image to make it circular
+  style: "width: 200px;"
 
 
 selected_papers: false # includes a list of papers marked as "selected={true}"
