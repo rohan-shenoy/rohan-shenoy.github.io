@@ -6,6 +6,11 @@
 // Dimensions
 $max-content-width: {{ site.max_width }};
 
+.profile img {
+  width: 200px !important;
+  height: auto;
+}
+
 @import
   "variables",
   "themes",
