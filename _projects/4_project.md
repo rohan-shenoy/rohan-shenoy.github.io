@@ -3,7 +3,7 @@ layout: page
 title: Image Warping and Mosaicing
 description: Rohan Shenoy
 importance: 4
-category: CS180
+category: Computer Vision Projects
 related_publications: true
 ---
 

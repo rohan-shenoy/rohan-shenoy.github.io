@@ -3,7 +3,7 @@ layout: page
 title: CS180 - Project 1. The Prokudin-Gorskii Collection
 description: Rohan Shenoy
 importance: 2
-category: CS180
+category: Computer Vision Projects
 related_publications: true
 ---
 

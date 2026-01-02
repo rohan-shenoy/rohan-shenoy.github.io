@@ -3,7 +3,7 @@ layout: page
 title: CS180 - Project 4. Neural Radiance Fields
 description: Rohan Shenoy
 importance: 5
-category: CS180
+category: Computer Vision Projects
 related_publications: true
 ---
 

@@ -3,7 +3,7 @@ layout: page
 title: Fun with Filters and Frequencies
 description: Rohan Shenoy
 importance: 3
-category: CS180
+category: Computer Vision Projects
 related_publications: true
 ---
 

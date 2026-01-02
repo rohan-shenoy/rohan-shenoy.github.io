@@ -3,7 +3,7 @@ layout: page
 title: CS180 - Project 0. Becoming Friends with Your Camera
 description: Rohan Shenoy
 importance: 1
-category: CS180
+category: Computer Vision Projects
 related_publications: true
 ---
 

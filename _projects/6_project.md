@@ -3,7 +3,7 @@ layout: page
 title: Fun With Diffusion Models!
 description: Rohan Shenoy
 importance: 6
-category: CS180
+category: Computer Vision Projects
 related_publications: true
 math: true
 ---
