@@ -4,7 +4,7 @@ title: CS180 - Project 4. Neural Radiance Fields
 description: Rohan Shenoy
 importance: 5
 category: CS180
-related_publications: false
+related_publications: true
 ---
 
 In this project, we build an end-to-end nerf pipeline that is capable of reconstructing a 3D view of an object from a series of 2D pictures.

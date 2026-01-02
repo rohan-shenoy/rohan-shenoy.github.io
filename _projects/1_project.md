@@ -4,7 +4,7 @@ title: CS180 - Project 0. Becoming Friends with Your Camera
 description: Rohan Shenoy
 importance: 1
 category: CS180
-related_publications: false
+related_publications: true
 ---
 
 ### Part 1: Selfie — The Wrong Way vs. The Right Way

@@ -4,7 +4,7 @@ title: Image Warping and Mosaicing
 description: Rohan Shenoy
 importance: 4
 category: CS180
-related_publications: false
+related_publications: true
 ---
 
 This project explores image warping and mosaicing techniques to create seamless panoramic images. I implement homography computation, image warping with different interpolation methods, and blending techniques to combine multiple photographs into cohesive mosaics.

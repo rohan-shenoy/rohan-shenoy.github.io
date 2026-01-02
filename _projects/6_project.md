@@ -4,7 +4,7 @@ title: Fun With Diffusion Models!
 description: Rohan Shenoy
 importance: 6
 category: CS180
-related_publications: false
+related_publications: true
 math: true
 ---
 

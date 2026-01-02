@@ -4,7 +4,7 @@ title: CS180 - Project 1. The Prokudin-Gorskii Collection
 description: Rohan Shenoy
 importance: 2
 category: CS180
-related_publications: false
+related_publications: true
 ---
 
 This project focuses on the digitized glass plate images from Sergei Prokudin-Gorskii, a pioneer of color photography. His technique involved capturing three monochrome images of a scene in quick succession, each through a different color filter (red, green, and blue). Our task is to take these separated channels and align them to reconstruct the original color photograph.

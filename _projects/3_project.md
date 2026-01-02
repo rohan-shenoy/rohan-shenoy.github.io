@@ -4,7 +4,7 @@ title: Fun with Filters and Frequencies
 description: Rohan Shenoy
 importance: 3
 category: CS180
-related_publications: false
+related_publications: true
 ---
 
 This project explores the fundamentals of image processing through filtering and frequency domain manipulation. We apply the techniques we develop on a series of fun images to create cool visual effects.
