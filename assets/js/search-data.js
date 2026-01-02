@@ -17,8 +17,8 @@ ninja.data = [{
             window.location.href = "/rohan-shenoy/publications/";
           },
         },{id: "nav-projects",
-          title: "projects",
-          description: "A growing collection of your cool projects.",
+          title: "Projects",
+          description: "A collection of my selected school and research projects",
           section: "Navigation",
           handler: () => {
             window.location.href = "/rohan-shenoy/projects/";
