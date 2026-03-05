@@ -19,6 +19,7 @@
       <li><a href="projects.html">Projects</a></li>
       <li><a href="cv.html">CV</a></li>
     </ul>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">&#9790;</button>
   </div>
 </nav>
 
@@ -62,5 +63,14 @@
   <div class="container">&copy; 2025 Rohan Shenoy</div>
 </footer>
 
+<script>
+(function(){
+  var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = t;
+  updateIcon();
+  function updateIcon(){ document.querySelector('.theme-toggle').innerHTML = document.documentElement.dataset.theme === 'dark' ? '&#9728;' : '&#9790;'; }
+  window.toggleTheme = function(){ var n = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = n; localStorage.setItem('theme', n); updateIcon(); };
+})();
+</script>
 </body>
 </html>

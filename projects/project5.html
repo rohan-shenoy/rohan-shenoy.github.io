@@ -19,6 +19,7 @@
       <li><a href="../projects.html" class="active">Projects</a></li>
       <li><a href="../cv.html">CV</a></li>
     </ul>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">&#9790;</button>
   </div>
 </nav>
 
@@ -53,7 +54,7 @@
     <p>The network architecture is a simple MLP with sinusoidal positional encoding on the input coordinates. We use a learning rate of 1e-2 with the Adam optimizer and train for 2000 iterations.</p>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/Screenshot 2025-11-15 at 10.46.46 PM.png" alt="2D NeRF architecture diagram" style="max-width: 80%;">
+      <img src="../assets/proj4_deliverables/Screenshot 2025-11-15 at 10.46.46 PM.png" alt="2D NeRF architecture diagram">
     </div>
     <div class="caption">Architecture diagram for the 2D neural field.</div>
 
@@ -82,7 +83,7 @@
     <h3>PSNR Curve</h3>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/nerf_2d_training_cat/psnr_curve.png" alt="PSNR curve for cat image" style="max-width: 60%;">
+      <img src="../assets/proj4_deliverables/nerf_2d_training_cat/psnr_curve.png" alt="PSNR curve for cat image">
     </div>
     <div class="caption">PSNR curve over training iterations for the cat image. Higher PSNR indicates better reconstruction quality.</div>
 
@@ -91,7 +92,7 @@
     <p>We conduct a hyperparameter sweep over different positional encoding frequencies and network widths to understand how these choices affect the quality of the learned 2D neural field.</p>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/nerf_2d_training_hyperparam/final_recon_grid.png" alt="Hyperparameter sweep grid" style="max-width: 80%;">
+      <img src="../assets/proj4_deliverables/nerf_2d_training_hyperparam/final_recon_grid.png" alt="Hyperparameter sweep grid">
     </div>
     <div class="caption">Hyperparameter sweep showing the effect of different positional encoding frequencies and network sizes on reconstruction quality.</div>
 
@@ -110,14 +111,14 @@
     <h3>Network Architecture</h3>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/Screenshot 2025-11-15 at 11.28.23 PM.png" alt="3D NeRF architecture diagram" style="max-width: 80%;">
+      <img src="../assets/proj4_deliverables/Screenshot 2025-11-15 at 11.28.23 PM.png" alt="3D NeRF architecture diagram">
     </div>
     <div class="caption">Architecture diagram for the multi-view NeRF. The network takes positional-encoded 3D coordinates and viewing directions as input, and outputs RGB color and volume density.</div>
 
     <h3>Ray Visualization</h3>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/Screenshot 2025-11-15 at 11.48.54 AM.png" alt="Ray visualization" style="max-width: 60%;">
+      <img src="../assets/proj4_deliverables/Screenshot 2025-11-15 at 11.48.54 AM.png" alt="Ray visualization">
     </div>
     <div class="caption">Visualization of sampled rays from multiple camera viewpoints, showing how rays are cast through the scene.</div>
 
@@ -135,14 +136,14 @@
     <h3>Lego PSNR Curve</h3>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/psnr_curve.png" alt="Lego PSNR curve" style="max-width: 60%;">
+      <img src="../assets/proj4_deliverables/psnr_curve.png" alt="Lego PSNR curve">
     </div>
     <div class="caption">PSNR curve over training iterations for the Lego dataset.</div>
 
     <h3>Lego 3D Render</h3>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/nerf_spherical_render_z.gif" alt="Lego 3D render rotating around z-axis" style="max-width: 60%;">
+      <img src="../assets/proj4_deliverables/nerf_spherical_render_z.gif" alt="Lego 3D render rotating around z-axis">
     </div>
     <div class="caption">Novel view synthesis of the Lego scene, rendered by rotating the camera around the object.</div>
 
@@ -166,14 +167,14 @@
     <h3>Stadium PSNR Curve</h3>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/my_data_psnr.png" alt="Stadium PSNR curve" style="max-width: 60%;">
+      <img src="../assets/proj4_deliverables/my_data_psnr.png" alt="Stadium PSNR curve">
     </div>
     <div class="caption">PSNR curve over training iterations for the stadium dataset.</div>
 
     <h3>Stadium 3D Render</h3>
 
     <div class="image-row center">
-      <img src="../assets/proj4_deliverables/orbit_iter_5000 (1).gif" alt="Stadium 3D render orbit" style="max-width: 60%;">
+      <img src="../assets/proj4_deliverables/orbit_iter_5000 (1).gif" alt="Stadium 3D render orbit">
     </div>
     <div class="caption">Novel view synthesis of the stadium scene, rendered by orbiting the camera around the object.</div>
 
@@ -184,5 +185,14 @@
   <div class="container">&copy; 2025 Rohan Shenoy</div>
 </footer>
 
+<script>
+(function(){
+  var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = t;
+  updateIcon();
+  function updateIcon(){ document.querySelector('.theme-toggle').innerHTML = document.documentElement.dataset.theme === 'dark' ? '&#9728;' : '&#9790;'; }
+  window.toggleTheme = function(){ var n = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = n; localStorage.setItem('theme', n); updateIcon(); };
+})();
+</script>
 </body>
 </html>

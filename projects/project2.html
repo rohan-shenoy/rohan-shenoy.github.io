@@ -20,6 +20,7 @@
       <li><a href="../projects.html" class="active">Projects</a></li>
       <li><a href="../cv.html">CV</a></li>
     </ul>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">&#9790;</button>
   </div>
 </nav>
 
@@ -72,7 +73,7 @@
     <p>For high-resolution images like <code>emir.tif</code>, an exhaustive search is computationally expensive. A more efficient strategy is the multi-scale image pyramid. This approach creates a series of downsampled images (a pyramid). It first finds a coarse alignment on the smallest image, then refines the search in a small window at progressively higher resolutions. This coarse-to-fine strategy is significantly faster and more effective for large displacements.</p>
 
     <div class="image-row center">
-      <img src="../assets/proj1_outputs/emir.png" alt="Emir Aligned" style="max-width: 60%;">
+      <img src="../assets/proj1_outputs/emir.png" alt="Emir Aligned">
     </div>
     <div class="caption">The Emir image, aligned using the efficient multi-scale pyramid method.</div>
 
@@ -82,15 +83,15 @@
 
     <p>Here are more results from aligning other images from the Prokudin-Gorskii collection.</p>
 
-    <div class="image-row center"><img src="../assets/proj1_outputs/church.png" alt="Church" style="max-width: 60%;"></div>
-    <div class="image-row center"><img src="../assets/proj1_outputs/harvesters.png" alt="Harvesters" style="max-width: 60%;"></div>
-    <div class="image-row center"><img src="../assets/proj1_outputs/icon.png" alt="Icon" style="max-width: 60%;"></div>
-    <div class="image-row center"><img src="../assets/proj1_outputs/melons.png" alt="Melons" style="max-width: 60%;"></div>
-    <div class="image-row center"><img src="../assets/proj1_outputs/monastery.png" alt="Monastery" style="max-width: 60%;"></div>
-    <div class="image-row center"><img src="../assets/proj1_outputs/self_portrait.png" alt="Self Portrait" style="max-width: 60%;"></div>
-    <div class="image-row center"><img src="../assets/proj1_outputs/three_generations.png" alt="Three Generations" style="max-width: 60%;"></div>
-    <div class="image-row center"><img src="../assets/proj1_outputs/tobolsk.png" alt="Tobolsk" style="max-width: 60%;"></div>
-    <div class="image-row center"><img src="../assets/proj1_outputs/siren.png" alt="Siren" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/church.png" alt="Church"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/harvesters.png" alt="Harvesters"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/icon.png" alt="Icon"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/melons.png" alt="Melons"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/monastery.png" alt="Monastery"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/self_portrait.png" alt="Self Portrait"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/three_generations.png" alt="Three Generations"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/tobolsk.png" alt="Tobolsk"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/siren.png" alt="Siren"></div>
 
     <hr>
 
@@ -133,5 +134,14 @@
   <div class="container">&copy; 2025 Rohan Shenoy</div>
 </footer>
 
+<script>
+(function(){
+  var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = t;
+  updateIcon();
+  function updateIcon(){ document.querySelector('.theme-toggle').innerHTML = document.documentElement.dataset.theme === 'dark' ? '&#9728;' : '&#9790;'; }
+  window.toggleTheme = function(){ var n = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = n; localStorage.setItem('theme', n); updateIcon(); };
+})();
+</script>
 </body>
 </html>

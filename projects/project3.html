@@ -20,6 +20,7 @@
       <li><a href="../projects.html" class="active">Projects</a></li>
       <li><a href="../cv.html">CV</a></li>
     </ul>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">&#9790;</button>
   </div>
 </nav>
 
@@ -133,7 +134,7 @@ def convolve_2loops(image, kernel, padding = True):
     </div>
     <div class="caption">Left: Original headshot image. Right: Result after applying 9x9 box filter to grayscale version of headshot.</div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/1.1/timing_test.png" alt="Timing Comparison">
     </div>
     <div class="caption">Runtime comparison between my convolution implementations and scipy's built-in function.</div>
@@ -218,7 +219,7 @@ def convolve_2loops(image, kernel, padding = True):
     </div>
     <div class="caption">Left: Gradient magnitude using DoG filters (single convolution). Right: Gradient magnitude from smooth then differentiate approach.</div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/1.3/binary_edges.png" alt="Binary Edge Image">
     </div>
     <div class="caption">Final binary edge image using DoG filters.</div>
@@ -258,7 +259,7 @@ def convolve_2loops(image, kernel, padding = True):
     </div>
     <div class="caption">Left: Original Taj Mahal. Middle: Blurred version. Right: High frequency components.</div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/2.1/taj_sharpened_alpha_1.5.jpg" alt="Sharpened Taj">
     </div>
     <div class="caption">Sharpened Taj Mahal using unsharp masking.</div>
@@ -404,44 +405,44 @@ def convolve_2loops(image, kernel, padding = True):
     </div>
     <div class="caption">Left: Original apple image. Right: Original orange image.</div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/2.3/oraple_process.png" alt="Complete Pyramid Visualization">
     </div>
     <div class="caption">Complete visualization showing Gaussian and Laplacian pyramids for both apple and orange images, demonstrating the multi-resolution decomposition process.</div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/2.4/oraple_process.png" alt="Blending Process Visualization">
     </div>
     <div class="caption">Detailed visualization of the improved blending process for part 2.4 showing how each pyramid level is combined using the multi-resolution mask.</div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/2.4/oraple.png" alt="Final Oraple Result">
     </div>
     <div class="caption">The final "oraple" result - seamlessly blended apple and orange using multi-resolution techniques.</div>
 
     <h4>Additional Blending Examples</h4>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/data/coffee.jpg" alt="Cup of Coffee">
     </div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/data/mars.jpg" alt="Mars">
     </div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/2.4/mars_coffee.jpg" alt="Cup of Mars">
     </div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/data/guinness.png" alt="Guinness">
     </div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/data/street.png" alt="Nighttime Street">
     </div>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/proj2_results/2.4/street_guinness_blend.jpg" alt="Guinness Street">
     </div>
     <div class="caption">Additional examples of multi-resolution blending showing input images and their seamlessly blended results.</div>
@@ -459,5 +460,14 @@ def convolve_2loops(image, kernel, padding = True):
   <div class="container">&copy; 2025 Rohan Shenoy</div>
 </footer>
 
+<script>
+(function(){
+  var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = t;
+  updateIcon();
+  function updateIcon(){ document.querySelector('.theme-toggle').innerHTML = document.documentElement.dataset.theme === 'dark' ? '&#9728;' : '&#9790;'; }
+  window.toggleTheme = function(){ var n = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = n; localStorage.setItem('theme', n); updateIcon(); };
+})();
+</script>
 </body>
 </html>

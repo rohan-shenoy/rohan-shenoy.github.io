@@ -8,10 +8,21 @@
   --bg: #fafaf8;
   --bg-card: #fff;
   --border: #e0ddd8;
+  --code-bg: #f5f4f0;
   --max-w: 750px;
   --font-body: 'Source Sans Pro', 'Segoe UI', system-ui, -apple-system, sans-serif;
   --font-heading: Georgia, 'Times New Roman', serif;
   --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+[data-theme="dark"] {
+  --text: #e0e0e0;
+  --text-light: #a0a0a0;
+  --accent: #d4756b;
+  --bg: #1a1a1a;
+  --bg-card: #252525;
+  --border: #333;
+  --code-bg: #2a2a2a;
 }
 
 html { font-size: 17px; scroll-behavior: smooth; }
@@ -68,6 +79,19 @@ nav .nav-links a {
 
 nav .nav-links a:hover,
 nav .nav-links a.active { color: var(--accent); }
+
+/* Theme toggle */
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--text);
+  padding: 0.25rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.theme-toggle:hover { color: var(--accent); }
 
 /* Mobile nav */
 .nav-toggle { display: none; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text); }
@@ -201,11 +225,17 @@ main { padding: 2.5rem 0 4rem; }
   margin: 1rem 0;
 }
 
-.image-row img { flex: 1 1 200px; min-width: 0; }
+.image-row img { flex: 1 1 0; min-width: 0; }
+.image-row img:only-child { max-width: 60%; margin: 0 auto; flex: none; }
 .image-row.small img { flex: 1 1 120px; }
 
 .image-row.center { justify-content: center; }
-.image-row.center img { flex: 0 1 auto; max-width: 50%; }
+.image-row.center img { flex: 0 1 auto; max-width: 60%; }
+
+/* Inner div wrappers (project5/6 captioned images) */
+.image-row > div { flex: 1 1 0; min-width: 0; }
+.image-row > div img { width: 100%; }
+.image-row.small > div { flex: 1 1 120px; }
 
 .caption {
   font-size: 0.85rem;
@@ -217,7 +247,7 @@ main { padding: 2.5rem 0 4rem; }
 
 /* Code blocks */
 pre {
-  background: #f5f4f0;
+  background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 1rem 1.25rem;
@@ -233,7 +263,7 @@ code {
 }
 
 p code, li code {
-  background: #f5f4f0;
+  background: var(--code-bg);
   padding: 0.15em 0.35em;
   border-radius: 3px;
 }
@@ -260,5 +290,6 @@ footer {
 @media (max-width: 600px) {
   .image-row { flex-direction: column; }
   .image-row img { flex: 1 1 100%; }
+  .image-row img:only-child { max-width: 100%; }
   .image-row.center img { max-width: 100%; }
 }

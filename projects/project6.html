@@ -20,6 +20,7 @@
       <li><a href="../projects.html" class="active">Projects</a></li>
       <li><a href="../cv.html">CV</a></li>
     </ul>
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">&#9790;</button>
   </div>
 </nav>
 
@@ -653,7 +654,7 @@
     $$\mathcal{L} = \| \hat{x}_0 - x_0 \|^2$$
 
     <p><strong>Visualization of noisy training images at various noise levels:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/2_2/1.2_noisy_images.png" alt="Noisy MNIST images">
     </div>
     <div class="caption">Noisy MNIST images at varying noise levels (\(\sigma\)).</div>
@@ -676,19 +677,19 @@
     $$\mathcal{L} = \mathbb{E}_{x_0, \sigma}\left[\| D_\theta(x_0 + \sigma\epsilon) - x_0 \|^2\right]$$
 
     <p><strong>Results after Epoch 1:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/2_2/2_2epoch1.png" alt="Denoising results epoch 1">
     </div>
     <div class="caption">Denoising results after 1 epoch of training.</div>
 
     <p><strong>Results after Epoch 5:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/2_2/2_2epoch5.png" alt="Denoising results epoch 5">
     </div>
     <div class="caption">Denoising results after 5 epochs of training.</div>
 
     <p><strong>Training loss curve:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/2_2/2_2training_curve.png" alt="Training loss curve">
     </div>
     <div class="caption">Training loss over epochs for the single-step denoiser.</div>
@@ -701,7 +702,7 @@
 
     <p>We test the trained denoiser on out-of-distribution noise levels to see how well it generalizes. The model was trained with noise levels sampled uniformly from [0, 1], so we test it on noise levels outside this range.</p>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/2_2/2_2ood_denoising.png" alt="Out-of-distribution denoising">
     </div>
     <div class="caption">Out-of-distribution denoising results on unseen noise levels.</div>
@@ -715,19 +716,19 @@
     <p>We test what happens when we feed pure noise (\(\sigma = 1.0\)) into the denoiser. This is interesting because the input contains no signal from the original image.</p>
 
     <p><strong>Pure noise denoising after Epoch 1:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/2_2/2_3_Pure_Noise_Epoch1.png" alt="Pure noise denoising epoch 1">
     </div>
     <div class="caption">Denoising pure noise after epoch 1.</div>
 
     <p><strong>Pure noise denoising after Epoch 5:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/2_2/2_3_Pure_Noise_Epoch5.png" alt="Pure noise denoising epoch 5">
     </div>
     <div class="caption">Denoising pure noise after epoch 5.</div>
 
     <p><strong>Training loss curve:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/2_2/2_2training_curve.png" alt="Training loss curve">
     </div>
     <div class="caption">Training loss curve for reference.</div>
@@ -746,7 +747,7 @@
 
     <p>We train a time-conditioned UNet where the timestep \(t\) is provided as an additional input to the model. This allows the model to adapt its denoising strategy based on the current noise level.</p>
 
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_2/2.2_training_curve.png" alt="Time-conditioned training curve">
     </div>
     <div class="caption">Training loss curve for the time-conditioned UNet.</div>
@@ -760,19 +761,19 @@
     <p>We sample from the time-conditioned UNet by starting from pure noise and iteratively denoising through a sequence of timesteps. Below are samples generated at different stages of training:</p>
 
     <p><strong>Samples after Epoch 1:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_3/2.3_samples_epoch_1.png" alt="Samples epoch 1">
     </div>
     <div class="caption">Generated samples after epoch 1.</div>
 
     <p><strong>Samples after Epoch 5:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_3/2.3_samples_epoch_5.png" alt="Samples epoch 5">
     </div>
     <div class="caption">Generated samples after epoch 5.</div>
 
     <p><strong>Samples after Epoch 10:</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_3/2.3_samples_epoch_10.png" alt="Samples epoch 10">
     </div>
     <div class="caption">Generated samples after epoch 10.</div>
@@ -786,13 +787,13 @@
     <p>We further extend the model with class conditioning, allowing us to generate specific digit classes (0-9). The class label is provided as a one-hot vector and injected into the UNet alongside the time embedding. During training, we randomly drop the class label (replacing it with a null token) 10% of the time to enable classifier-free guidance at inference.</p>
 
     <p><strong>Training curve (with learning rate scheduling):</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_5/2.5_training_curve.png" alt="Class-conditioned training curve">
     </div>
     <div class="caption">Training loss for the class-conditioned UNet with learning rate scheduling.</div>
 
     <p><strong>Training curve (without learning rate scheduling):</strong></p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_5/2.5_no_lr_training_curve.png" alt="Class-conditioned training curve (no LR scheduling)">
     </div>
     <div class="caption">Training loss for the class-conditioned UNet without learning rate scheduling.</div>
@@ -811,38 +812,38 @@
 
     <p><strong>Samples with LR scheduling:</strong></p>
     <p>Epoch 1:</p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_6/2.6_samples_epoch_1.png" alt="Class-conditioned samples epoch 1">
     </div>
     <div class="caption">Class-conditioned samples after epoch 1 (with LR scheduling).</div>
 
     <p>Epoch 5:</p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_6/2.6_samples_epoch_5.png" alt="Class-conditioned samples epoch 5">
     </div>
     <div class="caption">Class-conditioned samples after epoch 5 (with LR scheduling).</div>
 
     <p>Epoch 10:</p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_6/2.6_samples_epoch_10.png" alt="Class-conditioned samples epoch 10">
     </div>
     <div class="caption">Class-conditioned samples after epoch 10 (with LR scheduling).</div>
 
     <p><strong>Samples without LR scheduling:</strong></p>
     <p>Epoch 1:</p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_1.png" alt="Class-conditioned samples epoch 1 (no LR)">
     </div>
     <div class="caption">Class-conditioned samples after epoch 1 (without LR scheduling).</div>
 
     <p>Epoch 5:</p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_5.png" alt="Class-conditioned samples epoch 5 (no LR)">
     </div>
     <div class="caption">Class-conditioned samples after epoch 5 (without LR scheduling).</div>
 
     <p>Epoch 10:</p>
-    <div class="image-row">
+    <div class="image-row center">
       <img src="../assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_10.png" alt="Class-conditioned samples epoch 10 (no LR)">
     </div>
     <div class="caption">Class-conditioned samples after epoch 10 (without LR scheduling).</div>
@@ -856,5 +857,14 @@
   <div class="container">&copy; 2025 Rohan Shenoy</div>
 </footer>
 
+<script>
+(function(){
+  var t = localStorage.getItem('theme') || (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+  document.documentElement.dataset.theme = t;
+  updateIcon();
+  function updateIcon(){ document.querySelector('.theme-toggle').innerHTML = document.documentElement.dataset.theme === 'dark' ? '&#9728;' : '&#9790;'; }
+  window.toggleTheme = function(){ var n = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; document.documentElement.dataset.theme = n; localStorage.setItem('theme', n); updateIcon(); };
+})();
+</script>
 </body>
 </html>
