@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fun with Diffusion Models - Rohan Shenoy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x269B;</text></svg>">
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="../index.html" class="site-name">Rohan Shenoy</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../publications.html">Publications</a></li>
+      <li><a href="../projects.html" class="active">Projects</a></li>
+      <li><a href="../cv.html">CV</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="container project-content">
+    <h1>CS180 &mdash; Project 5: Fun with Diffusion Models</h1>
+
+    <p>This project explores the power of diffusion models. The project is divided into two parts: Part A investigates the capabilities of large pretrained diffusion models for image generation and editing, while in Part B we develop and train our own diffusion model on the MNIST dataset.</p>
+
+    <hr>
+
+    <!-- ============================================================ -->
+    <!-- Part A -->
+    <!-- ============================================================ -->
+
+    <h2>Part A: The Power of Diffusion Models</h2>
+
+    <h3>A.0 Playing with DeepFloyd IF</h3>
+
+    <p>We begin by exploring the DeepFloyd IF diffusion model, a large pretrained text-to-image model. We test it with various text prompts and compare the quality of generated images at different numbers of inference steps (10 vs 50). As expected, more inference steps yield higher-quality and more coherent images.</p>
+
+    <p><strong>10 Inference Steps:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/0/boots_flowers_10.png" alt="Boots with flowers, 10 steps">
+        <div class="caption">"a pair of boots with flowers growing out of them"</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/0/leafy_chair_10.png" alt="Leafy chair, 10 steps">
+        <div class="caption">"a chair that looks like a leafy plant"</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/0/beer_cig_10.png" alt="Beer and cigarette, 10 steps">
+        <div class="caption">"a beer next to a cigarette"</div>
+      </div>
+    </div>
+
+    <p><strong>50 Inference Steps:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/0/boots_flowers_50.png" alt="Boots with flowers, 50 steps">
+        <div class="caption">"a pair of boots with flowers growing out of them"</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/0/leafy_chair_50.png" alt="Leafy chair, 50 steps">
+        <div class="caption">"a chair that looks like a leafy plant"</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/0/beer_cig_50.png" alt="Beer and cigarette, 50 steps">
+        <div class="caption">"a beer next to a cigarette"</div>
+      </div>
+    </div>
+
+    <p>With 50 inference steps, the images are noticeably sharper and more detailed compared to 10 steps. The boots have clearer floral details, the leafy chair is more coherent, and the beer and cigarette scene is more realistic.</p>
+
+    <hr>
+
+    <h3>A.1.1 Forward Process</h3>
+
+    <p>The forward (noising) process in diffusion models gradually adds Gaussian noise to a clean image over \(T\) timesteps. The noisy image at timestep \(t\) can be computed directly from the original image \(x_0\) using:</p>
+
+    $$q(x_t \mid x_0) = \mathcal{N}\!\left(x_t;\, \sqrt{\bar{\alpha}_t}\, x_0,\ (1-\bar{\alpha}_t)I\right)$$
+
+    <p>This means we can sample \(x_t\) in closed form:</p>
+
+    $$x_t = \sqrt{\bar{\alpha}_t}\, x_0 + \sqrt{1-\bar{\alpha}_t}\,\epsilon,\quad \epsilon \sim \mathcal{N}(0, I)$$
+
+    <p>Below we show the Campanile test image and the results of applying the forward process at timesteps \(t = 250, 500, 750\):</p>
+
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2campinelle_original.png" alt="Original Campanile">
+        <div class="caption">Original</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_1/1.1_noisy_250.png" alt="Noisy t=250">
+        <div class="caption">t = 250</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_1/1.1_noisy_500.png" alt="Noisy t=500">
+        <div class="caption">t = 500</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_1/1.1_noisy_750.png" alt="Noisy t=750">
+        <div class="caption">t = 750</div>
+      </div>
+    </div>
+
+    <p>As \(t\) increases, the image becomes progressively noisier, losing more and more of its original structure until it approaches pure Gaussian noise.</p>
+
+    <hr>
+
+    <h3>A.1.2 Classical Denoising</h3>
+
+    <p>As a baseline, we attempt to denoise the noisy images using a classical Gaussian blur filter. This is a simple, non-learned approach that cannot recover fine details.</p>
+
+    <p><strong>Noisy images:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_noisy_250.png" alt="Noisy t=250">
+        <div class="caption">t = 250</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_noisy_500.png" alt="Noisy t=500">
+        <div class="caption">t = 500</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_noisy_750.png" alt="Noisy t=750">
+        <div class="caption">t = 750</div>
+      </div>
+    </div>
+
+    <p><strong>Gaussian blur denoised:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_denoised_250.png" alt="Gaussian denoised t=250">
+        <div class="caption">t = 250</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_denoised_500.png" alt="Gaussian denoised t=500">
+        <div class="caption">t = 500</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_denoised_750.png" alt="Gaussian denoised t=750">
+        <div class="caption">t = 750</div>
+      </div>
+    </div>
+
+    <p>The Gaussian blur removes some noise but also blurs all the details. For higher noise levels, the results are extremely blurry and do not resemble the original image at all.</p>
+
+    <hr>
+
+    <h3>A.1.3 One-Step Denoising</h3>
+
+    <p>Instead of classical filtering, we can use a pretrained diffusion model to estimate the noise and recover the clean image in a single step. Given a noisy image \(x_t\) and the predicted noise \(\epsilon_\theta(x_t, t)\), we estimate the clean image as:</p>
+
+    $$\hat{x}_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}\left(x_t - \sqrt{1 - \bar{\alpha}_t}\,\epsilon_\theta(x_t, t)\right)$$
+
+    <p><strong>Noisy images:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_noisy_250.png" alt="Noisy t=250">
+        <div class="caption">t = 250</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_noisy_500.png" alt="Noisy t=500">
+        <div class="caption">t = 500</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_2/1.2_noisy_750.png" alt="Noisy t=750">
+        <div class="caption">t = 750</div>
+      </div>
+    </div>
+
+    <p><strong>One-step denoised:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_3/1.3_denoised_t250.png" alt="One-step denoised t=250">
+        <div class="caption">t = 250</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_3/1.3_denoised_t500.png" alt="One-step denoised t=500">
+        <div class="caption">t = 500</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_3/1.3_denoised_t750.png" alt="One-step denoised t=750">
+        <div class="caption">t = 750</div>
+      </div>
+    </div>
+
+    <p>The one-step denoising with the pretrained model is significantly better than classical denoising, especially at lower noise levels (t=250). At higher noise levels, the model still produces a reasonable estimate but may lose some fine details.</p>
+
+    <hr>
+
+    <h3>A.1.4 Iterative Denoising</h3>
+
+    <p>While one-step denoising gives reasonable results, we can do much better by iteratively denoising the image through a sequence of timesteps. At each step, we compute:</p>
+
+    $$x_{t'} = \frac{\sqrt{\bar{\alpha}_{t'}} \beta_t}{1 - \bar{\alpha}_t} x_0 + \frac{\sqrt{\alpha_t}(1 - \bar{\alpha}_{t'})}{1 - \bar{\alpha}_t} x_t + v_\sigma$$
+
+    <p>where \(x_0\) is our current estimate of the clean image, \(t'\) is the next (less noisy) timestep, and \(v_\sigma\) is a noise term. We use a set of strided timesteps to speed up the process while still obtaining high-quality results.</p>
+
+    <p><strong>Iterative denoising at various steps:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_iter_step_30.png" alt="Iterative step 30">
+        <div class="caption">Step 30</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_iter_step_25.png" alt="Iterative step 25">
+        <div class="caption">Step 25</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_iter_step_20.png" alt="Iterative step 20">
+        <div class="caption">Step 20</div>
+      </div>
+    </div>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_iter_step_15.png" alt="Iterative step 15">
+        <div class="caption">Step 15</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_iter_step_10.png" alt="Iterative step 10">
+        <div class="caption">Step 10</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_iter_step_5.png" alt="Iterative step 5">
+        <div class="caption">Step 5</div>
+      </div>
+    </div>
+
+    <p><strong>Comparison of final results:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_iterative_final.png" alt="Iterative denoising final">
+        <div class="caption">Iterative Denoising</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_one_step.png" alt="One-step denoising">
+        <div class="caption">One-Step Denoising</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_4/1.4_gaussian.png" alt="Gaussian blur denoising">
+        <div class="caption">Gaussian Blur</div>
+      </div>
+    </div>
+
+    <p>The iterative denoising approach produces the best results by far, recovering sharp details and realistic textures that are lost with both the one-step and Gaussian blur approaches.</p>
+
+    <hr>
+
+    <h3>A.1.5 Diffusion Model Sampling</h3>
+
+    <p>By starting from pure noise (\(x_T \sim \mathcal{N}(0, I)\)) and running the iterative denoising process, we can generate entirely new images from the diffusion model. Here are five samples generated with the text prompt "a high quality photo":</p>
+
+    <div class="image-row small">
+      <img src="../assets/cs180_proj5/1_5/1.5_sample_1.png" alt="Sample 1">
+      <img src="../assets/cs180_proj5/1_5/1.5_sample_2.png" alt="Sample 2">
+      <img src="../assets/cs180_proj5/1_5/1.5_sample_3.png" alt="Sample 3">
+      <img src="../assets/cs180_proj5/1_5/1.5_sample_4.png" alt="Sample 4">
+      <img src="../assets/cs180_proj5/1_5/1.5_sample_5.png" alt="Sample 5">
+    </div>
+    <div class="caption">Five samples generated from pure noise using iterative denoising.</div>
+
+    <p>The generated images are coherent but somewhat blurry and lack fine detail. This is because we are using only the unconditional noise estimate without any guidance.</p>
+
+    <hr>
+
+    <h3>A.1.6 Classifier Free Guidance (CFG)</h3>
+
+    <p>To improve the quality and sharpness of generated images, we use Classifier Free Guidance (CFG). CFG combines the conditional and unconditional noise estimates using a guidance scale \(\gamma\):</p>
+
+    $$\epsilon = \epsilon_u + \gamma(\epsilon_c - \epsilon_u)$$
+
+    <p>where \(\epsilon_u\) is the unconditional noise estimate and \(\epsilon_c\) is the conditional noise estimate. A higher \(\gamma\) pushes the generation more strongly toward the text prompt, yielding sharper and more coherent images at the cost of reduced diversity.</p>
+
+    <div class="image-row small">
+      <img src="../assets/cs180_proj5/1_6/1.6_cfg_sample_1.png" alt="CFG Sample 1">
+      <img src="../assets/cs180_proj5/1_6/1.6_cfg_sample_2.png" alt="CFG Sample 2">
+      <img src="../assets/cs180_proj5/1_6/1.6_cfg_sample_3.png" alt="CFG Sample 3">
+      <img src="../assets/cs180_proj5/1_6/1.6_cfg_sample_4.png" alt="CFG Sample 4">
+      <img src="../assets/cs180_proj5/1_6/1.6_cfg_sample_5.png" alt="CFG Sample 5">
+    </div>
+    <div class="caption">Five samples generated with Classifier Free Guidance (CFG).</div>
+
+    <p>Compared to the unconditional samples in A.1.5, the CFG samples are noticeably sharper and more detailed. The images are more coherent and look like realistic photographs.</p>
+
+    <hr>
+
+    <h3>A.1.7 Image-to-image Translation</h3>
+
+    <p>By adding noise to an existing image and then denoising it, we can perform image editing. The key idea is to add noise to the image up to some intermediate timestep \(i_{\text{start}}\) and then run the iterative denoising process from there. A smaller \(i_{\text{start}}\) means more noise is added and the result diverges more from the original, while a larger \(i_{\text{start}}\) preserves more of the original structure.</p>
+
+    <h4>A.1.7.1 Editing Hand-Drawn and Web Images</h4>
+
+    <p>We apply the SDEdit algorithm to hand-drawn sketches and web images. By varying the noise level (\(i_{\text{start}}\)), we can control how much the diffusion model "reimagines" the original image.</p>
+
+    <p><strong>Avocado (web image):</strong></p>
+    <div class="image-row small">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i1_256.png" alt="Avocado i_start=1">
+        <div class="caption">i_start=1</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i3_256.png" alt="Avocado i_start=3">
+        <div class="caption">i_start=3</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i5_256.png" alt="Avocado i_start=5">
+        <div class="caption">i_start=5</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i7_256.png" alt="Avocado i_start=7">
+        <div class="caption">i_start=7</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i10_256.png" alt="Avocado i_start=10">
+        <div class="caption">i_start=10</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_avocado_i20_256.png" alt="Avocado i_start=20">
+        <div class="caption">i_start=20</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/avocado_1.7.2.png" alt="Avocado original">
+        <div class="caption">Original</div>
+      </div>
+    </div>
+
+    <p><strong>Hand-drawn sketch 1:</strong></p>
+    <div class="image-row small">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i1_256.png" alt="Drawing 1 i_start=1">
+        <div class="caption">i_start=1</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i3_256.png" alt="Drawing 1 i_start=3">
+        <div class="caption">i_start=3</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i5_256.png" alt="Drawing 1 i_start=5">
+        <div class="caption">i_start=5</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i7_256.png" alt="Drawing 1 i_start=7">
+        <div class="caption">i_start=7</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i10_256.png" alt="Drawing 1 i_start=10">
+        <div class="caption">i_start=10</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing1_i20_256.png" alt="Drawing 1 i_start=20">
+        <div class="caption">i_start=20</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_handdrawn_raw.png" alt="Hand-drawn original 1">
+        <div class="caption">Original</div>
+      </div>
+    </div>
+
+    <p><strong>Hand-drawn sketch 2:</strong></p>
+    <div class="image-row small">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i1_256.png" alt="Drawing 2 i_start=1">
+        <div class="caption">i_start=1</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i3_256.png" alt="Drawing 2 i_start=3">
+        <div class="caption">i_start=3</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i5_256.png" alt="Drawing 2 i_start=5">
+        <div class="caption">i_start=5</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i7_256.png" alt="Drawing 2 i_start=7">
+        <div class="caption">i_start=7</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i10_256.png" alt="Drawing 2 i_start=10">
+        <div class="caption">i_start=10</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_drawing2_i20_256.png" alt="Drawing 2 i_start=20">
+        <div class="caption">i_start=20</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_1/1.7_handdrawn_raw2.png" alt="Hand-drawn original 2">
+        <div class="caption">Original</div>
+      </div>
+    </div>
+
+    <p>At low \(i_{\text{start}}\) values, the model generates images that bear little resemblance to the original input. As \(i_{\text{start}}\) increases, the generated images increasingly preserve the structure and content of the original, while still adding realistic details and textures.</p>
+
+    <hr>
+
+    <h4>A.1.7.2 Inpainting</h4>
+
+    <p>We can also use diffusion models for inpainting &mdash; filling in a masked region of an image. At each denoising step, we replace the unmasked portion with the appropriately noised version of the original image:</p>
+
+    $$x_t \leftarrow m \cdot x_t + (1 - m)\cdot \text{forward}(x_{\text{orig}}, t)$$
+
+    <p>where \(m\) is the binary mask (1 inside the region to inpaint, 0 outside). This forces the model to generate new content only within the masked region while keeping the rest of the image intact.</p>
+
+    <p><strong>Campanile:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2campinelle_original.png" alt="Campanile original">
+        <div class="caption">Original</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2campinelle_mask_applied.png" alt="Campanile mask">
+        <div class="caption">Mask Applied</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2_campanile_inpaint_256.png" alt="Campanile inpainted">
+        <div class="caption">Inpainted</div>
+      </div>
+    </div>
+
+    <p><strong>Basketball:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2basketball_original.png" alt="Basketball original">
+        <div class="caption">Original</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2_mask_applied_basketball.png" alt="Basketball mask">
+        <div class="caption">Mask Applied</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2_basketball.png" alt="Basketball inpainted">
+        <div class="caption">Inpainted</div>
+      </div>
+    </div>
+
+    <p><strong>Jump:</strong></p>
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2.png" alt="Jump original">
+        <div class="caption">Original</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2_mask_applied.png" alt="Jump mask">
+        <div class="caption">Mask Applied</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2_jump_256.png" alt="Jump inpainted">
+        <div class="caption">Inpainted</div>
+      </div>
+    </div>
+
+    <p>The diffusion model does a remarkable job of filling in the masked regions with content that is both realistic and contextually appropriate.</p>
+
+    <hr>
+
+    <h4>A.1.7.3 Text-Conditional Image-to-image Translation</h4>
+
+    <p>We can combine SDEdit with text conditioning to guide the image editing process. By providing a text prompt, we can steer the diffusion model to generate content that matches the desired description while preserving the overall structure of the original image.</p>
+
+    <p><strong>Campanile &rarr; "a rocket ship":</strong></p>
+    <div class="image-row small">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket1_256.png" alt="Rocket i_start=1">
+        <div class="caption">i_start=1</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket3_256.png" alt="Rocket i_start=3">
+        <div class="caption">i_start=3</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket5_256.png" alt="Rocket i_start=5">
+        <div class="caption">i_start=5</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket7_256.png" alt="Rocket i_start=7">
+        <div class="caption">i_start=7</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket10_256.png" alt="Rocket i_start=10">
+        <div class="caption">i_start=10</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_campinelle_rocket20_256.png" alt="Rocket i_start=20">
+        <div class="caption">i_start=20</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_2/1.7.2campinelle_original.png" alt="Campanile original">
+        <div class="caption">Original</div>
+      </div>
+    </div>
+
+    <p><strong>"a chair that looks like a leafy plant":</strong></p>
+    <div class="image-row small">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i1_256.png" alt="Leafy chair i_start=1">
+        <div class="caption">i_start=1</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i3_256.png" alt="Leafy chair i_start=3">
+        <div class="caption">i_start=3</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i5_256.png" alt="Leafy chair i_start=5">
+        <div class="caption">i_start=5</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i7_256.png" alt="Leafy chair i_start=7">
+        <div class="caption">i_start=7</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i10_256.png" alt="Leafy chair i_start=10">
+        <div class="caption">i_start=10</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair_i20_256.png" alt="Leafy chair i_start=20">
+        <div class="caption">i_start=20</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_leafy_chair.png" alt="Leafy chair original">
+        <div class="caption">Original</div>
+      </div>
+    </div>
+
+    <p><strong>"a beer next to a cigarette":</strong></p>
+    <div class="image-row small">
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i1_256.png" alt="Beer cig i_start=1">
+        <div class="caption">i_start=1</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i3_256.png" alt="Beer cig i_start=3">
+        <div class="caption">i_start=3</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i5_256.png" alt="Beer cig i_start=5">
+        <div class="caption">i_start=5</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i7_256.png" alt="Beer cig i_start=7">
+        <div class="caption">i_start=7</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i10_256.png" alt="Beer cig i_start=10">
+        <div class="caption">i_start=10</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3_beer_cig_i20_256.png" alt="Beer cig i_start=20">
+        <div class="caption">i_start=20</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_7/1_7_3/1.7.3smoking.png" alt="Beer cig original">
+        <div class="caption">Original</div>
+      </div>
+    </div>
+
+    <p>The text-conditional approach successfully transforms images to match the target prompt while maintaining the general composition and structure of the original. Lower \(i_{\text{start}}\) values produce more dramatic transformations.</p>
+
+    <hr>
+
+    <h3>A.1.8 Visual Anagrams</h3>
+
+    <p>Visual anagrams are images that look like one thing right-side up and something else when flipped upside down. We create these by averaging the noise estimates from two different orientations at each denoising step:</p>
+
+    $$\epsilon = \frac{1}{2}\left(\epsilon_1 + \text{flip}(\epsilon_2)\right)$$
+
+    <p>where \(\epsilon_1\) is the noise estimate for the upright prompt and \(\epsilon_2\) is the noise estimate for the flipped prompt. This ensures the final image is coherent from both orientations.</p>
+
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_8/1.8_oil_painting_256.png" alt="Oil painting upright">
+        <div class="caption">Upright: "an oil painting of people around a campfire"</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_8/1.8_oil_painting_flipped_256.png" alt="Oil painting flipped">
+        <div class="caption">Flipped: "an oil painting of an old man"</div>
+      </div>
+    </div>
+
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_8/1.8_skull_256.png" alt="Skull upright">
+        <div class="caption">Upright: "a photo of a skull"</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_8/1.8_skull_flipped_256.png" alt="Skull flipped">
+        <div class="caption">Flipped: "a photo of a waterfall"</div>
+      </div>
+    </div>
+
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_8/1.8_goldfish_coast.png" alt="Goldfish coast upright">
+        <div class="caption">Upright: "a lithograph of a goldfish"</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_8/1.8_goldfish_coast_flipped_256.png" alt="Goldfish coast flipped">
+        <div class="caption">Flipped: "a lithograph of a coastline"</div>
+      </div>
+    </div>
+
+    <p>The visual anagrams are surprisingly effective &mdash; each image clearly depicts one subject when viewed normally and a completely different subject when flipped upside down.</p>
+
+    <hr>
+
+    <h3>A.1.9 Hybrid Images</h3>
+
+    <p>Inspired by factorized diffusion, we can create hybrid images that show different content at different viewing distances. We use low-pass and high-pass filtering on the noise estimates from two different prompts:</p>
+
+    $$\epsilon = f_{\text{low}}(\epsilon_1) + f_{\text{high}}(\epsilon_2)$$
+
+    <p>where \(f_{\text{low}}\) is a low-pass filter and \(f_{\text{high}}\) is a high-pass filter. The result is an image where the low-frequency content (visible from far away) corresponds to one prompt and the high-frequency content (visible up close) corresponds to another.</p>
+
+    <div class="image-row">
+      <div>
+        <img src="../assets/cs180_proj5/1_9/1.9_pencil_painting_256.png" alt="Pencil painting hybrid">
+        <div class="caption">Low-freq: "a pencil" / High-freq: "a painting"</div>
+      </div>
+      <div>
+        <img src="../assets/cs180_proj5/1_9/1.9_rocket_waterfall_256.png" alt="Rocket waterfall hybrid">
+        <div class="caption">Low-freq: "a rocket ship" / High-freq: "a waterfall"</div>
+      </div>
+    </div>
+
+    <p>When viewed from far away (or squinting), the low-frequency content dominates, and when viewed up close, the high-frequency details become visible, revealing the second image.</p>
+
+    <hr>
+
+    <!-- ============================================================ -->
+    <!-- Part B -->
+    <!-- ============================================================ -->
+
+    <h2>Part B: Training Our Own Diffusion Model</h2>
+
+    <h3>B.1 Single-Step Denoising UNet</h3>
+
+    <p>In Part B, we implement and train our own diffusion model from scratch on the MNIST handwritten digit dataset. We start by building a simple UNet architecture for single-step denoising, then progressively add time conditioning and class conditioning to build a full generative model.</p>
+
+    <hr>
+
+    <h3>B.1.2 Training a UNet Denoiser</h3>
+
+    <p>We train a UNet to denoise noisy MNIST images. Given a clean image \(x_0\), we create a noisy version by adding Gaussian noise:</p>
+
+    $$x_{\text{noisy}} = x_0 + \sigma \cdot \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)$$
+
+    <p>The model is trained to minimize the mean squared error (MSE) between the predicted clean image and the ground truth:</p>
+
+    $$\mathcal{L} = \| \hat{x}_0 - x_0 \|^2$$
+
+    <p><strong>Visualization of noisy training images at various noise levels:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/2_2/1.2_noisy_images.png" alt="Noisy MNIST images">
+    </div>
+    <div class="caption">Noisy MNIST images at varying noise levels (\(\sigma\)).</div>
+
+    <hr>
+
+    <h4>B.1.2.1 Training Pipeline</h4>
+
+    <p>We train the UNet with the following hyperparameters:</p>
+    <ul>
+      <li>Batch size: 256</li>
+      <li>Learning rate: 1e-4</li>
+      <li>Optimizer: Adam</li>
+      <li>Number of epochs: 5</li>
+      <li>Noise level \(\sigma\): randomly sampled from \(\mathcal{U}(0.0, 1.0)\)</li>
+    </ul>
+
+    <p>The loss function is the L2 (MSE) loss between the predicted denoised image and the ground truth clean image:</p>
+
+    $$\mathcal{L} = \mathbb{E}_{x_0, \sigma}\left[\| D_\theta(x_0 + \sigma\epsilon) - x_0 \|^2\right]$$
+
+    <p><strong>Results after Epoch 1:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/2_2/2_2epoch1.png" alt="Denoising results epoch 1">
+    </div>
+    <div class="caption">Denoising results after 1 epoch of training.</div>
+
+    <p><strong>Results after Epoch 5:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/2_2/2_2epoch5.png" alt="Denoising results epoch 5">
+    </div>
+    <div class="caption">Denoising results after 5 epochs of training.</div>
+
+    <p><strong>Training loss curve:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/2_2/2_2training_curve.png" alt="Training loss curve">
+    </div>
+    <div class="caption">Training loss over epochs for the single-step denoiser.</div>
+
+    <p>The model quickly learns to denoise images, with significant improvement between epoch 1 and epoch 5. The training loss decreases smoothly and converges.</p>
+
+    <hr>
+
+    <h4>B.1.2.2 Out-of-Distribution Testing</h4>
+
+    <p>We test the trained denoiser on out-of-distribution noise levels to see how well it generalizes. The model was trained with noise levels sampled uniformly from [0, 1], so we test it on noise levels outside this range.</p>
+
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/2_2/2_2ood_denoising.png" alt="Out-of-distribution denoising">
+    </div>
+    <div class="caption">Out-of-distribution denoising results on unseen noise levels.</div>
+
+    <p>The model generalizes reasonably to moderate out-of-distribution noise levels, but performance degrades for noise levels far outside the training range.</p>
+
+    <hr>
+
+    <h4>B.1.2.3 Denoising Pure Noise</h4>
+
+    <p>We test what happens when we feed pure noise (\(\sigma = 1.0\)) into the denoiser. This is interesting because the input contains no signal from the original image.</p>
+
+    <p><strong>Pure noise denoising after Epoch 1:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/2_2/2_3_Pure_Noise_Epoch1.png" alt="Pure noise denoising epoch 1">
+    </div>
+    <div class="caption">Denoising pure noise after epoch 1.</div>
+
+    <p><strong>Pure noise denoising after Epoch 5:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/2_2/2_3_Pure_Noise_Epoch5.png" alt="Pure noise denoising epoch 5">
+    </div>
+    <div class="caption">Denoising pure noise after epoch 5.</div>
+
+    <p><strong>Training loss curve:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/2_2/2_2training_curve.png" alt="Training loss curve">
+    </div>
+    <div class="caption">Training loss curve for reference.</div>
+
+    <p>When given pure noise, the denoiser attempts to produce digit-like images. After more training, the outputs look more like actual digits, suggesting the model has learned some prior over the digit manifold.</p>
+
+    <hr>
+
+    <h3>B.2 Conditioning the UNet</h3>
+
+    <p>To build a proper generative model, we extend the UNet with conditioning. We adopt a flow matching / DDPM-style approach where the model predicts the velocity (or noise) rather than the clean image directly. We add time conditioning so the model knows the current noise level, and later add class conditioning so we can generate specific digit classes.</p>
+
+    <hr>
+
+    <h3>B.2.2 Training the Time Conditioned UNet</h3>
+
+    <p>We train a time-conditioned UNet where the timestep \(t\) is provided as an additional input to the model. This allows the model to adapt its denoising strategy based on the current noise level.</p>
+
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_2/2.2_training_curve.png" alt="Time-conditioned training curve">
+    </div>
+    <div class="caption">Training loss curve for the time-conditioned UNet.</div>
+
+    <p>The time-conditioned model converges smoothly and achieves lower loss than the unconditioned version, as the model can specialize its denoising behavior for each noise level.</p>
+
+    <hr>
+
+    <h3>B.2.3 Sampling from the UNet</h3>
+
+    <p>We sample from the time-conditioned UNet by starting from pure noise and iteratively denoising through a sequence of timesteps. Below are samples generated at different stages of training:</p>
+
+    <p><strong>Samples after Epoch 1:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_3/2.3_samples_epoch_1.png" alt="Samples epoch 1">
+    </div>
+    <div class="caption">Generated samples after epoch 1.</div>
+
+    <p><strong>Samples after Epoch 5:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_3/2.3_samples_epoch_5.png" alt="Samples epoch 5">
+    </div>
+    <div class="caption">Generated samples after epoch 5.</div>
+
+    <p><strong>Samples after Epoch 10:</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_3/2.3_samples_epoch_10.png" alt="Samples epoch 10">
+    </div>
+    <div class="caption">Generated samples after epoch 10.</div>
+
+    <p>The quality of generated samples improves dramatically over training. By epoch 10, the model generates clear, recognizable handwritten digits.</p>
+
+    <hr>
+
+    <h3>B.2.5 Class Conditioning</h3>
+
+    <p>We further extend the model with class conditioning, allowing us to generate specific digit classes (0-9). The class label is provided as a one-hot vector and injected into the UNet alongside the time embedding. During training, we randomly drop the class label (replacing it with a null token) 10% of the time to enable classifier-free guidance at inference.</p>
+
+    <p><strong>Training curve (with learning rate scheduling):</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_5/2.5_training_curve.png" alt="Class-conditioned training curve">
+    </div>
+    <div class="caption">Training loss for the class-conditioned UNet with learning rate scheduling.</div>
+
+    <p><strong>Training curve (without learning rate scheduling):</strong></p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_5/2.5_no_lr_training_curve.png" alt="Class-conditioned training curve (no LR scheduling)">
+    </div>
+    <div class="caption">Training loss for the class-conditioned UNet without learning rate scheduling.</div>
+
+    <p>Learning rate scheduling helps the model converge to a lower final loss and produces more stable training dynamics.</p>
+
+    <hr>
+
+    <h3>B.2.6 Class Conditioning Sampling</h3>
+
+    <p>We sample from the class-conditioned model using classifier-free guidance (CFG). At each denoising step, we compute both the conditional and unconditional velocity estimates and combine them:</p>
+
+    $$v = v_{\text{uncond}} + \gamma \bigl(v_{\text{cond}} - v_{\text{uncond}}\bigr)$$
+
+    <p>where \(\gamma\) is the guidance scale. Higher \(\gamma\) values produce samples that more closely match the target class, at the cost of reduced diversity.</p>
+
+    <p><strong>Samples with LR scheduling:</strong></p>
+    <p>Epoch 1:</p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_6/2.6_samples_epoch_1.png" alt="Class-conditioned samples epoch 1">
+    </div>
+    <div class="caption">Class-conditioned samples after epoch 1 (with LR scheduling).</div>
+
+    <p>Epoch 5:</p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_6/2.6_samples_epoch_5.png" alt="Class-conditioned samples epoch 5">
+    </div>
+    <div class="caption">Class-conditioned samples after epoch 5 (with LR scheduling).</div>
+
+    <p>Epoch 10:</p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_6/2.6_samples_epoch_10.png" alt="Class-conditioned samples epoch 10">
+    </div>
+    <div class="caption">Class-conditioned samples after epoch 10 (with LR scheduling).</div>
+
+    <p><strong>Samples without LR scheduling:</strong></p>
+    <p>Epoch 1:</p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_1.png" alt="Class-conditioned samples epoch 1 (no LR)">
+    </div>
+    <div class="caption">Class-conditioned samples after epoch 1 (without LR scheduling).</div>
+
+    <p>Epoch 5:</p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_5.png" alt="Class-conditioned samples epoch 5 (no LR)">
+    </div>
+    <div class="caption">Class-conditioned samples after epoch 5 (without LR scheduling).</div>
+
+    <p>Epoch 10:</p>
+    <div class="image-row">
+      <img src="../assets/cs180_proj5/3_6/2.6_samples_no_lr_epoch_10.png" alt="Class-conditioned samples epoch 10 (no LR)">
+    </div>
+    <div class="caption">Class-conditioned samples after epoch 10 (without LR scheduling).</div>
+
+    <p>The class-conditioned model with CFG produces high-quality, class-specific digits. The model with learning rate scheduling generally produces cleaner samples, especially at later epochs. By epoch 10, the generated digits are sharp, diverse, and clearly recognizable as their target classes.</p>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">&copy; 2025 Rohan Shenoy</div>
+</footer>
+
+</body>
+</html>

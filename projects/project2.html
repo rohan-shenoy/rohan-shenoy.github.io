@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project 1: Prokudin-Gorskii - Rohan Shenoy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x269B;</text></svg>">
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="../index.html" class="site-name">Rohan Shenoy</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../publications.html">Publications</a></li>
+      <li><a href="../projects.html" class="active">Projects</a></li>
+      <li><a href="../cv.html">CV</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="container project-content">
+    <h1>CS180 &mdash; Project 1: The Prokudin-Gorskii Collection</h1>
+
+    <p>This project focuses on the digitized glass plate images from Sergei Prokudin-Gorskii, a pioneer of color photography. His technique involved capturing three monochrome images of a scene in quick succession, each through a different color filter (red, green, and blue). Our task is to take these separated channels and align them to reconstruct the original color photograph.</p>
+
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/cathedral_uncolored.png" alt="Unaligned Cathedral">
+      <img src="../assets/proj1_outputs/emir_uncolored.png" alt="Unaligned Emir">
+    </div>
+    <div class="caption">The raw, uncolored glass plate negatives for the Cathedral and Emir images. Each contains the red, green, and blue channels stacked vertically.</div>
+
+    <hr>
+
+    <h3>Naive Channel Overlay</h3>
+
+    <p>The simplest approach to creating a color image is to split the three channels and directly stack them. However, because the plates were captured separately, they are almost always misaligned. This naive overlay results in significant color fringing and a blurry, distorted image.</p>
+
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/direct_cathedral.png" alt="Direct Cathedral">
+      <img src="../assets/proj1_outputs/direct_emir.png" alt="Direct Emir">
+    </div>
+    <div class="caption">Directly overlaying the R, G, and B channels reveals severe misalignment.</div>
+
+    <hr>
+
+    <h3>Single-Scale Alignment</h3>
+
+    <p>To fix the misalignment, we can use a single-scale alignment algorithm. This method performs an exhaustive search over a small pixel window, shifting one channel relative to a reference channel. The best alignment is the displacement that maximizes the similarity between the two channels, according to a chosen distance metric. We use two primary distance metrics:</p>
+
+    <p>1. <strong>L2 Norm (Sum of Squared Differences):</strong> This metric calculates the direct Euclidean distance between the pixel values of two images. It's fast but sensitive to overall brightness differences.</p>
+    <p>$$ L_2 = \sqrt{\sum_{i=1}^{n}(u_i - v_i)^2} $$</p>
+
+    <p>2. <strong>Normalized Cross-Correlation (NCC):</strong> This metric is more robust to linear variations in brightness and contrast. It normalizes both images before comparing them.</p>
+    <p>$$ NCC = \frac{1}{n} \sum_{i=1}^{n} \frac{(u_i - \bar{u})}{\sigma_u} \frac{(v_i - \bar{v})}{\sigma_v} $$</p>
+
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/cathedral_l2.png" alt="Cathedral L2">
+      <img src="../assets/proj1_outputs/cathedral_ncc.png" alt="Cathedral NCC">
+    </div>
+    <div class="caption">Cathedral aligned with L2 Norm (left) and Normalized Cross-Correlation (right).</div>
+
+    <hr>
+
+    <h3>Multi-Scale Pyramid Alignment</h3>
+
+    <p>For high-resolution images like <code>emir.tif</code>, an exhaustive search is computationally expensive. A more efficient strategy is the multi-scale image pyramid. This approach creates a series of downsampled images (a pyramid). It first finds a coarse alignment on the smallest image, then refines the search in a small window at progressively higher resolutions. This coarse-to-fine strategy is significantly faster and more effective for large displacements.</p>
+
+    <div class="image-row center">
+      <img src="../assets/proj1_outputs/emir.png" alt="Emir Aligned" style="max-width: 60%;">
+    </div>
+    <div class="caption">The Emir image, aligned using the efficient multi-scale pyramid method.</div>
+
+    <hr>
+
+    <h3>Alignment Gallery</h3>
+
+    <p>Here are more results from aligning other images from the Prokudin-Gorskii collection.</p>
+
+    <div class="image-row center"><img src="../assets/proj1_outputs/church.png" alt="Church" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/harvesters.png" alt="Harvesters" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/icon.png" alt="Icon" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/melons.png" alt="Melons" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/monastery.png" alt="Monastery" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/self_portrait.png" alt="Self Portrait" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/three_generations.png" alt="Three Generations" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/tobolsk.png" alt="Tobolsk" style="max-width: 60%;"></div>
+    <div class="image-row center"><img src="../assets/proj1_outputs/siren.png" alt="Siren" style="max-width: 60%;"></div>
+
+    <hr>
+
+    <h3>Final Gallery</h3>
+
+    <p>Here are the final, processed images, which have been aligned using the L2 Norm, enhanced with adaptive histogram equalization, and cropped by 5% to remove noisy borders. Histogram equalization is a contrast enhancement technique that redistributes the pixel intensities of an image to be as uniform as possible.</p>
+
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/outputs_final/church_final.png" alt="Church">
+      <img src="../assets/proj1_outputs/outputs_final/emir_final.png" alt="Emir">
+    </div>
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/outputs_final/harvesters_final.png" alt="Harvesters">
+      <img src="../assets/proj1_outputs/outputs_final/icon_final.png" alt="Icon">
+    </div>
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/outputs_final/italil_final.png" alt="Italil">
+      <img src="../assets/proj1_outputs/outputs_final/lastochikino_final.png" alt="Lastochikino">
+    </div>
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/outputs_final/lugano_final.png" alt="Lugano">
+      <img src="../assets/proj1_outputs/outputs_final/melons_final.png" alt="Melons">
+    </div>
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/outputs_final/self_portrait_final.png" alt="Self Portrait">
+      <img src="../assets/proj1_outputs/outputs_final/siren_final.png" alt="Siren">
+    </div>
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/outputs_final/three_generations_final.png" alt="Three Generations">
+      <img src="../assets/proj1_outputs/outputs_final/camel.png" alt="Camel">
+    </div>
+    <div class="image-row">
+      <img src="../assets/proj1_outputs/outputs_final/yurt.png" alt="Yurt">
+      <img src="../assets/proj1_outputs/outputs_final/palace.png" alt="Palace">
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">&copy; 2025 Rohan Shenoy</div>
+</footer>
+
+</body>
+</html>

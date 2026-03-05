@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Warping and Mosaicing - Rohan Shenoy</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x269B;</text></svg>">
+</head>
+<body>
+
+<nav>
+  <div class="container">
+    <a href="../index.html" class="site-name">Rohan Shenoy</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="../index.html">About</a></li>
+      <li><a href="../publications.html">Publications</a></li>
+      <li><a href="../projects.html" class="active">Projects</a></li>
+      <li><a href="../cv.html">CV</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="container project-content">
+    <h1>CS180 &mdash; Project 3: Image Warping and Mosaicing</h1>
+
+    <p>This project explores image warping and mosaicing techniques to create seamless panoramic images. I implement homography computation, image warping with different interpolation methods, and blending techniques to combine multiple photographs into cohesive mosaics.</p>
+
+    <hr>
+
+    <h2>Part A.1: Shoot the Pictures</h2>
+
+    <p>I captured multiple sets of images with projective transformations between them by fixing the center of projection and rotating the camera. The images have significant overlap (40-70%) to facilitate registration.</p>
+
+    <h3>Image Set 1: Lecture</h3>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_1/rlecture1.jpeg" alt="Lecture Image 1">
+      <img src="../assets/proj3/Mosaic_1/rlecture2.jpeg" alt="Lecture Image 2">
+    </div>
+    <div class="caption">First image set of cs180 lecture.</div>
+
+    <h3>Image Set 2: 7/11 + Car Crash</h3>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_3/r1.jpg" alt="7/11 Image 1">
+      <img src="../assets/proj3/Mosaic_3/r2.jpg" alt="7/11 Image 2">
+    </div>
+    <div class="caption">Second image set of 7/11 view from my balcony. You can notice a car being towed away in the right image after a car crash occured.</div>
+
+    <h3>Image Set 3: Campus</h3>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_2/r1.jpg" alt="Campus Image 1">
+      <img src="../assets/proj3/Mosaic_2/r2.jpg" alt="Campus Image 2">
+      <img src="../assets/proj3/Mosaic_2/r3.jpg" alt="Campus Image 3">
+    </div>
+    <div class="caption">3 images of campus that I will stitch to make a larger mosaic. Note that these were taken before the project was fully explained so there is some translation between the images rather than pure rotation. You will see the affect of this later on.</div>
+
+    <hr>
+
+    <h2>Part A.2: Recover Homographies</h2>
+
+    <p>I implemented a function to compute homographies from point correspondences using least-squares optimization.</p>
+
+    <h3>Theory</h3>
+
+    <p>A homography H is a 3x3 matrix that relates corresponding points between two images: <strong>p' = Hp</strong>. With 8 degrees of freedom, we need at least 4 point correspondences to solve for H, though more points provide better stability. Typically I try to use 12-20, and then compute the least squares solution as the system is now overdetermined and has infinitely many solutions.</p>
+
+    <h3>Point Correspondences and Homography Results</h3>
+
+    <p>Below we show the images with the correspondence points plotted on them. Below each set of images, we have the homography matrices computed for each one.</p>
+
+    <h4>Lecture Images</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_1/rlecture1_with_points.png" alt="Lecture 1 Correspondences Plotted">
+      <img src="../assets/proj3/Mosaic_1/rlecture2_with_points.png" alt="Lecture 2 Correspondences Plotted">
+    </div>
+    <div class="caption">Point correspondences marked on lecture images.</div>
+
+    <p><strong>Homography Matrix:</strong></p>
+<pre><code>2.54224189,-0.02326480,-4665.08583807
+0.58036296,2.01332082,-1374.72424197
+0.00040159,-0.00003625,1.00000000</code></pre>
+
+    <h4>7/11 Images</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_3/r1_with_points.png" alt="7/11 Image 1 Correspondences Plotted">
+      <img src="../assets/proj3/Mosaic_3/r2_with_points.png" alt="7/11 Image 2 Correspondences Plotted">
+    </div>
+    <div class="caption">Point correspondences marked on 7/11 images.</div>
+
+    <p><strong>Homography Matrix:</strong></p>
+<pre><code>3.39946906,-0.23491370,-6928.81047850
+1.08393872,2.72711418,-2939.12346025
+0.00061393,-0.00003907,1.00000000</code></pre>
+
+    <h4>Campus Images</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_2/r1_with_points.png" alt="Campus Image 1 Correspondences">
+      <img src="../assets/proj3/Mosaic_2/r2_with_points.png" alt="Campus Image 2 Correspondences">
+      <img src="../assets/proj3/Mosaic_2/r3_with_points.png" alt="Campus Image 3 Correspondences">
+    </div>
+    <div class="caption">Point correspondences marked on campus images.</div>
+
+    <p><strong>Homography Matrix 1 (Image 1 to Image 2):</strong></p>
+<pre><code>1.45918618,-0.04536459,-1514.89683294
+0.18613671,1.22894351,-338.71987586
+0.00012040,-0.00003097,1.00000000</code></pre>
+
+    <p><strong>Homography Matrix 2 (Image 2 to Image 3):</strong></p>
+<pre><code>0.36786312,-0.14242818,91.61102915
+-0.22004851,0.45603987,574.54088030
+-0.00013562,-0.00012392,1.00000000</code></pre>
+
+    <hr>
+
+    <h2>Part A.3: Warp the Images</h2>
+
+    <p>I implemented two interpolation methods for image warping using inverse warping to avoid holes in the output.</p>
+
+    <h3>Interpolation Methods</h3>
+
+    <h4>Nearest Neighbor Interpolation</h4>
+    <ul>
+      <li>Rounds coordinates to the nearest pixel value</li>
+      <li>Fast but can produce blocky artifacts</li>
+      <li>Good for preserving sharp edges</li>
+    </ul>
+
+    <h4>Bilinear Interpolation</h4>
+    <ul>
+      <li>Uses weighted average of four neighboring pixels</li>
+      <li>Smoother results but more computationally expensive</li>
+      <li>Better for natural image content</li>
+    </ul>
+
+    <h3>Rectification Results</h3>
+
+    <p>Before creating mosaics, I tested the warping implementation by rectifying images containing rectangular objects.</p>
+
+    <div class="image-row">
+      <img src="../assets/proj3/homographies/muir_woods.jpg" alt="Original Muir Woods">
+      <img src="../assets/proj3/homographies/muir_woods_warped_nn.jpg" alt="NN Warped Muir Woods">
+      <img src="../assets/proj3/homographies/muir_woods_warped_bilinear.jpg" alt="Bilinear Warped Muir Woods">
+    </div>
+    <div class="caption">Left: Original image of Muir Woods map to save me from getting lost. Middle: Image rectified using nearest-neighbors. Right: Image rectified using bilinear weighting.</div>
+
+    <div class="image-row">
+      <img src="../assets/proj3/homographies/van_gogh.jpg" alt="Original Van Gogh">
+      <img src="../assets/proj3/homographies/van_gogh_warped_nn.jpg" alt="NN Warped Van Gogh">
+      <img src="../assets/proj3/homographies/van_gogh_warped_bilinear.jpg" alt="Bilinear Warped Van Gogh">
+    </div>
+    <div class="caption">Left: Original image of Van Gogh painting. Middle: Van Gogh rectified using nearest-neighbors. Right: Van Gogh rectified using bilinear weighting.</div>
+
+    <p><strong>Trade-offs:</strong></p>
+    <ul>
+      <li>Nearest neighbor is faster</li>
+      <li>For these images, the methods ended up doing the same transformation. Moving forward, I use the bilinear warping as I feel like it is the safer method in general to use.</li>
+    </ul>
+
+    <hr>
+
+    <h2>Part A.4: Blend the Images into a Mosaic</h2>
+
+    <p>I created seamless mosaics by warping images into alignment and using blending to reduce edge artifacts.</p>
+
+    <h3>Blending Strategy</h3>
+
+    <p>Instead of simple overlay which creates harsh edges, I implemented weighted averaging with alpha masks. Here's how the blending process works:</p>
+
+    <p><strong>Why Blending is Necessary:</strong></p>
+    <p>When you simply overlay warped images, you get harsh transitions and visible seams where images meet. This happens because:</p>
+    <ul>
+      <li>Small alignment errors create double images or gaps</li>
+      <li>Different exposures between photos create brightness discontinuities</li>
+      <li>Camera settings may vary slightly between shots</li>
+      <li>Scene changes quickly</li>
+    </ul>
+
+    <p><strong>How to Use Blending:</strong></p>
+    <ol>
+      <li><strong>Create Alpha Masks</strong>: For each image, generate a mask where values are 1.0 at the center and gradually decrease to 0.0 at the edges</li>
+      <li><strong>Normalize Weights</strong>: At each pixel, ensure all alpha values sum to 1.0 across all contributing images</li>
+      <li><strong>Weighted Average</strong>: Compute the final pixel value as: <code>final_pixel = &Sigma;(alpha_i &times; pixel_i) / &Sigma;(alpha_i)</code></li>
+    </ol>
+
+    <p><strong>Alpha Mask Design:</strong></p>
+    <ul>
+      <li><strong>Linear Falloff</strong>: Alpha decreases linearly from center to edge over a feathering distance</li>
+      <li><strong>Distance Transform</strong>: Use distance from image border to create smooth transitions</li>
+      <li><strong>Overlap Handling</strong>: In regions where multiple images overlap, blend based on relative distances from each image's center</li>
+    </ul>
+
+    <p><strong>Benefits of This Approach:</strong></p>
+    <ul>
+      <li>Eliminates hard edges between images</li>
+      <li>Reduces ghosting from small misalignments</li>
+      <li>Handles exposure differences gracefully</li>
+      <li>Creates natural-looking transitions</li>
+    </ul>
+
+    <h3>Mosaic Results</h3>
+
+    <h4>Mosaic 1: Lecture</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_1/rlecture1_warped.jpg" alt="Lecture 1 warped">
+      <img src="../assets/proj3/Mosaic_1/rlecture2_warped.jpg" alt="Lecture 2 warped">
+      <img src="../assets/proj3/Mosaic_1/rlecture1_lecture2_mosaic.jpg" alt="Lecture Final Mosaic">
+    </div>
+    <div class="caption">First mosaic: Source images (left, middle) and final blended result (right). Notice that we get some blurriness due to people in the class moving between when the shots were taken.</div>
+
+    <h4>Mosaic 2: 7/11 + Car Crash</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_3/r1_warped.jpg" alt="7/11 Warped 1">
+      <img src="../assets/proj3/Mosaic_3/r2_warped.jpg" alt="7/11 Warped 2">
+      <img src="../assets/proj3/Mosaic_3/r_mosaic.jpg" alt="7/11 Final Mosaic">
+    </div>
+    <div class="caption">Second mosaic showing the effectiveness of weighted blending for seamless stitching. This one is the best out of the 3.</div>
+
+    <h4>Mosaic 3: Campus</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_2/r1_warped_to_r2_center.jpg" alt="Campus Image 1 Warped">
+      <img src="../assets/proj3/Mosaic_2/r2_center_reference.jpg" alt="Campus Image 2 Reference">
+      <img src="../assets/proj3/Mosaic_2/r3_warped_to_r2_center.jpg" alt="Campus Image 3 Warped">
+    </div>
+
+    <div class="image-row center">
+      <img src="../assets/proj3/Mosaic_2/r123_panorama_r2_ref.jpg" alt="Campus Final Panorama">
+    </div>
+    <div class="caption">Third mosaic: Three source images combined into a wide panoramic view. You can see the affect of the aforementioned translation when taking the pictures. It makes the middle parts very blurry. Going forward, I know how to best rotate my phone to prevent any translation (like the technique used in the second set of images).</div>
+
+    <hr>
+
+    <h2>Part B: Feature Matching for Autostitching</h2>
+
+    <p>In this section, I implement the Multi-Image Matching algorithm based on the paper "Multi-Image Matching using Multi-Scale Oriented Patches" by Brown et al., with several simplifications. The goal is to automatically detect, match, and stitch images together without manual point selection as in the previous section.</p>
+
+    <h3>B.1: Harris Corner Detection</h3>
+
+    <p>The first step involves detecting interest points using the Harris Corner Detector. Harris corners are points in an image where the intensity changes significantly in multiple directions, making them good candidates for matching across different images.</p>
+
+    <p>I used the provided Harris corner detection implementation to identify potential interest points. The algorithm computes the Harris response function at each pixel and identifies local maxima as corner candidates.</p>
+
+    <p>After detecting Harris corners, I implemented Adaptive Non-Maximal Suppression (ANMS) to select a more evenly distributed subset of the strongest corners. ANMS works by suppressing corners that are not significantly stronger than their neighbors within a certain radius, resulting in a more spatially distributed set of features.</p>
+
+    <h4>Harris Corners Without ANMS</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/results/lemon_trees/01_IMG_3387_corners_no_anms.png" alt="Harris corners image 1">
+      <img src="../assets/proj3/results/lemon_trees/02_IMG_3389_corners_no_anms.png" alt="Harris corners image 2">
+      <img src="../assets/proj3/results/lemon_trees/03_IMG_3390_corners_no_anms.png" alt="Harris corners image 3">
+    </div>
+    <div class="caption">Harris corners detected without ANMS: Left side, center, and right side of lemon trees.</div>
+
+    <h4>Harris Corners With ANMS</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/results/lemon_trees/01_IMG_3387_corners_anms.png" alt="Harris corners with ANMS image 1">
+      <img src="../assets/proj3/results/lemon_trees/02_IMG_3389_corners_anms.png" alt="Harris corners with ANMS image 2">
+      <img src="../assets/proj3/results/lemon_trees/03_IMG_3390_corners_anms.png" alt="Harris corners with ANMS image 3">
+    </div>
+    <div class="caption">Harris corners detected with ANMS: Left side, center, and right side of lemon trees. Notice how ANMS spreads out the features throughout the image, which is important for computing robust homographies.</div>
+
+    <h3>B.2: Feature Descriptor Extraction</h3>
+
+    <p>Once interest points are detected, the next step is to extract distinctive feature descriptors around each corner. These descriptors capture the local appearance of the image region and enable matching between different images.</p>
+
+    <p>For each detected corner, I extract an 8x8 patch from a larger 40x40 window around the interest point. The larger window is first blurred to reduce noise and then sampled down to create the 8x8 descriptor. This approach provides better stability and distinctiveness compared to directly sampling the 8x8 patch.</p>
+
+    <p>The extracted descriptors are then normalized using bias and gain normalization to make them invariant to illumination changes. Bias normalization removes the mean, and gain normalization scales the descriptor to unit variance. This preprocessing step is crucial for robust matching across images with different lighting conditions.</p>
+
+    <h3>B.3: Feature Matching</h3>
+
+    <p>Feature matching involves finding pairs of descriptors from different images that are likely to correspond to the same physical point in the scene. I use the nearest neighbor distance ratio test proposed by Lowe to identify good matches.</p>
+
+    <p>For each descriptor in the first image, I compute its distance to all descriptors in the second image. A match is considered valid if the ratio of the distance to the nearest neighbor and the distance to the second nearest neighbor is below a threshold (typically 0.7-0.8). This ratio test helps reject ambiguous matches where multiple descriptors are similarly close. Below I show some example features that are extracted and match between the 7/11 image (we show the entire 40x40 patch so it is easier to visualize how the matching process occurs, but for the actual computations, we use the normalized 8x8 patches).</p>
+
+    <h4>Feature Matching Results</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/results/7_11_crash/feature_patches_match_01.png" alt="Feature matches 1-2">
+      <img src="../assets/proj3/results/7_11_crash/feature_patches_match_02.png" alt="Feature matches 2-3">
+    </div>
+
+    <div class="image-row">
+      <img src="../assets/proj3/results/7_11_crash/feature_patches_match_03.png" alt="Feature matches 3-4">
+      <img src="../assets/proj3/results/7_11_crash/feature_patches_match_04.png" alt="Feature matches 4-5">
+    </div>
+    <div class="caption">Example feature patches that match between consecutive images in the 7/11 sequence. Each pair shows corresponding 40x40 patches that were identified as matches.</div>
+
+    <h3>B.4: RANSAC for Robust Homography</h3>
+
+    <p>The final step involves computing a robust homography transformation using RANSAC (Random Sample Consensus). Even with the ratio test, some feature matches will be incorrect (outliers). RANSAC helps identify the largest set of consistent matches (inliers) and computes the homography from these reliable correspondences.</p>
+
+    <p>The 4-point RANSAC algorithm works by repeatedly:</p>
+    <ol>
+      <li>Randomly selecting 4 point correspondences</li>
+      <li>Computing a homography from these 4 points</li>
+      <li>Evaluating how many other correspondences are consistent with this homography (within a small error threshold)</li>
+      <li>Keeping track of the homography with the most inliers</li>
+    </ol>
+
+    <p>After many iterations, the homography with the most inliers is selected as the final transformation. This approach is robust to outliers and can handle situations where up to 50% of the matches are incorrect.</p>
+
+    <h4>RANSAC Inlier Detection</h4>
+
+    <div class="image-row">
+      <img src="../assets/proj3/results/clark_kerr/left_matches.png" alt="Left Image Matching">
+      <img src="../assets/proj3/results/clark_kerr/center_matches.png" alt="Center Image Matching">
+      <img src="../assets/proj3/results/clark_kerr/right_matches.png" alt="Right Image Matching">
+    </div>
+    <div class="caption">The matching points plotted on the clark kerr images.</div>
+
+    <h4>Manual vs Automatic Stitching Comparison</h4>
+
+    <p>The automatic feature-based approach produces different results compared to manual correspondence selection. While manual stitching allows for precise control over the alignment, automatic methods can sometimes capture more subtle geometric relationships. The automatic matching process is more robust when implemented correctly and is several orders of magnitudes faster (~30 seconds vs 10+ minutes). The 7/11 manual stitching is compared to the automatic cropping below:</p>
+
+    <div class="image-row">
+      <img src="../assets/proj3/Mosaic_3/r_mosaic.jpg" alt="Manual stitching result">
+      <img src="../assets/proj3/results/7_11_crash/mosaic.png" alt="Automatic stitching result">
+    </div>
+    <div class="caption">Left: Manual stitching result. Right: Automatic stitching result.</div>
+
+    <h3>Automatic Mosaics Gallery</h3>
+
+    <p>Here are some of the mosaics I created using this automatic stitching process. I make use of some clever techniques to produce some funny images.</p>
+
+    <div class="image-row center">
+      <img src="../assets/proj3/results/clark_kerr/mosaic.png" alt="Clark Kerr mosaic">
+    </div>
+    <div class="caption">View from freshman year dorm</div>
+
+    <div class="image-row center">
+      <img src="../assets/proj3/results/home_run_mosaic/mosaic.png" alt="Home run">
+    </div>
+    <div class="caption">Home run!</div>
+
+    <div class="image-row center">
+      <img src="../assets/proj3/results/lbnl_2/mosaic.png" alt="LBNL view">
+    </div>
+    <div class="caption">View from Lawrence Berkeley National Labs</div>
+
+    <div class="image-row center">
+      <img src="../assets/proj3/results/lemon_trees/mosaic.png" alt="Clark Kerr Lemon Trees">
+    </div>
+    <div class="caption">Lemon trees at Clark Kerr</div>
+
+    <div class="image-row center">
+      <img src="../assets/proj3/results/multi_cyp/mosaic.png" alt="Multi Cyp">
+    </div>
+    <div class="caption">Multi Cyp</div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">&copy; 2025 Rohan Shenoy</div>
+</footer>
+
+</body>
+</html>

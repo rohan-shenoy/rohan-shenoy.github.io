@@ -1,3 +1,0 @@
-I am a senior at UC Berkeley studying Computer Science and Applied Mathematics. For the past two years, I have worked with the [MIT Climate and Sustainability Consortium](https://climate.mit.edu/mit-climate-and-sustainability-consortium), advised by [Elsa Olivetti](https://dmse.mit.edu/people/elsa-olivetti) and [Evan Coleman](https://evancoleman.mit.edu/), on applied machine learning and large-scale computing. My academic interests lie at the intersection of machine learning, control theory, and sustainability, where I aim to develop data-driven methods that support resilient and efficient systems.
-
-Outside of academics, I enjoy skiing, soccer (as a dedicated Bayern Munich fan), backgammon and other strategy games, and puzzles.
