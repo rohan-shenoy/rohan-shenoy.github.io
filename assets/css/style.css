@@ -11,7 +11,7 @@
   --border: #d0d7e0;
   --border-strong: #a7b3c3;
   --code-bg: #e9edf2;
-  --max-w: 40rem;
+  --max-w: 54rem;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
   --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   color-scheme: light;
@@ -85,6 +85,9 @@ a.site-name:hover { color: var(--text); text-decoration: none; }
 .header-links { display: flex; align-items: center; gap: 1rem; }
 .header-links a { text-underline-offset: 8px; color: var(--text-light); }
 .header-links a:hover { color: var(--text); text-decoration-color: var(--text); }
+
+.header-links .icon-link { display: inline-flex; align-items: center; text-decoration: none; }
+.header-links .icon-link:hover { color: var(--accent); }
 
 .theme-toggle {
   background: none;
@@ -204,7 +207,7 @@ section + section { margin-top: 2rem; }
 
 /* ===== Project detail pages ===== */
 .container {
-  max-width: 750px;
+  max-width: calc(var(--max-w) + 6rem);
   margin: 0 auto;
   padding: 0 1rem;
 }
