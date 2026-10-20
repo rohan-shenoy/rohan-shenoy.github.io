@@ -4,47 +4,113 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rohan Shenoy</title>
+  <meta name="description" content="Rohan Shenoy, PhD student in Computer and Information Science at the University of Pennsylvania.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x269B;</text></svg>">
 </head>
 <body>
 
-<nav>
-  <div class="container">
-    <a href="index.html" class="site-name">Rohan Shenoy</a>
-    <button class="nav-toggle" aria-label="Toggle navigation" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
-    <ul class="nav-links">
-      <li><a href="index.html" class="active">About</a></li>
-      <li><a href="publications.html">Publications</a></li>
-      <li><a href="projects.html">Projects</a></li>
-      <li><a href="cv.html">CV</a></li>
-    </ul>
-    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">&#9790;</button>
-  </div>
-</nav>
+<div class="page">
 
-<main>
-  <div class="container">
-    <div class="about">
-      <img src="assets/img/headshot.jpg" alt="Rohan Shenoy" class="headshot">
-      <div class="bio">
-        <h1>Rohan Shenoy</h1>
-        <p>I am a senior at UC Berkeley studying Computer Science and Applied Mathematics. For the past two years, I have worked with the <a href="https://impactclimate.mit.edu/">MIT Climate and Sustainability Consortium</a>, advised by <a href="https://dmse.mit.edu/people/faculty/elsa-a-olivetti/">Elsa Olivetti</a> and <a href="https://eacoleman.github.io/">Evan Coleman</a>, on applied machine learning and large-scale computing. My academic interests lie at the intersection of machine learning, control theory, and sustainability, where I aim to develop data-driven methods that support resilient and efficient systems.</p>
-        <p>Outside of academics, I enjoy skiing, soccer (as a dedicated Bayern Munich fan), backgammon and other strategy games, and puzzles.</p>
-        <div class="social-links">
-          <a href="mailto:rohan_shenoy@berkeley.edu">Email</a>
-          <a href="https://www.linkedin.com/in/rohan-shenoy-/">LinkedIn</a>
-          <a href="https://scholar.google.com/citations?user=YOUR_ID">Google Scholar</a>
-          <a href="https://github.com/rohan-shenoy">GitHub</a>
-        </div>
-      </div>
+  <header class="site-header">
+    <h1 class="site-name">Rohan Shenoy</h1>
+    <nav class="header-links">
+      <a href="mailto:rpshenoy@engineering.upenn.edu">Email</a>
+      <a href="https://www.linkedin.com/in/rohanshenoy03/">LinkedIn</a>
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">&#9790;</button>
+    </nav>
+  </header>
+
+  <section class="intro">
+    <img src="assets/img/headshot.jpg" alt="Rohan Shenoy" class="headshot">
+    <div class="bio">
+      <p>I am currently a PhD student in Computer and Information Science at the <a href="https://www.cis.upenn.edu/">University of Pennsylvania</a>, where I am advised by Professors <a href="https://www.cis.upenn.edu/~linhphan/">Linh Thi Xuan Phan</a> and <a href="https://www.seas.upenn.edu/~leebcc/">Benjamin Lee</a>. I am fortunate to be funded by the <a href="https://www.nsfgrfp.org/">NSF Graduate Research Fellowship</a>.</p>
+      <p>My research focuses on the systems that robots run on, spanning distributed, embedded, and runtime systems. I am also interested in sustainable computing from a systems perspective: designing infrastructure that reduces the energy and carbon cost of computation without sacrificing performance.</p>
     </div>
-  </div>
-</main>
+  </section>
 
-<footer>
-  <div class="container">&copy; 2025 Rohan Shenoy</div>
-</footer>
+  <section class="prose">
+    <p>Before Penn, I studied Computer Science and Applied Mathematics at <a href="https://www.berkeley.edu/">UC Berkeley</a>. As an undergraduate, I spent two years with the <a href="https://impactclimate.mit.edu/">MIT Climate and Sustainability Consortium</a>, advised by <a href="https://dmse.mit.edu/people/faculty/elsa-a-olivetti/">Elsa Olivetti</a> and <a href="https://impactclimate.mit.edu/people/evan-coleman/">Evan Coleman</a>, where I used reinforcement learning to speed up NMR pulse sequencing for measuring soil atomic abundance. I have also collaborated with researchers at UMass Amherst, MIT, and Caltech on carbon-aware resource management, from scheduling large data processing workloads in the cloud to running machine learning efficiently on edge devices.</p>
+    <p>Outside of research, I enjoy skiing, soccer (as a dedicated Bayern Munich fan), backgammon and other strategy games, and puzzles.</p>
+  </section>
+
+  <section>
+    <h2 class="section-label">Publications</h2>
+    <ul class="timeline">
+      <li>
+        <a class="entry featured" href="https://www.usenix.org/system/files/osdi26-lechowicz.pdf">
+          <div class="entry-head">
+            <span class="entry-title">SPADE: Signal-Aware DAG Scheduling and Dynamic Provisioning for Data Processing Clusters</span>
+            <span class="entry-date">2026</span>
+          </div>
+          <div class="entry-meta">Adam Lechowicz, <strong>Rohan Shenoy</strong>, Noman Bashir, Mohammad Hajiesmaili, Adam Wierman, Christina Delimitrou</div>
+          <div class="entry-venue">USENIX Symposium on Operating Systems Design and Implementation (OSDI 2026)</div>
+        </a>
+      </li>
+      <li>
+        <a class="entry" href="https://openreview.net/pdf?id=uXYZZv6fiE">
+          <div class="entry-head">
+            <span class="entry-title">Counting Atoms Faster: Policy-Based Nuclear Magnetic Resonance Pulse Sequencing for Atomic Abundance Measurement</span>
+            <span class="entry-date">2026</span>
+          </div>
+          <div class="entry-meta"><strong>Rohan Shenoy</strong>, Evan Austen Coleman, Hans Gaensbauer, Elsa Olivetti</div>
+          <div class="entry-venue">International Conference on Machine Learning (ICML 2026)</div>
+        </a>
+      </li>
+      <li>
+        <a class="entry" href="https://dl.acm.org/doi/epdf/10.1145/3718958.3750478">
+          <div class="entry-head">
+            <span class="entry-title">Carbon- and Precedence-Aware Scheduling for Data Processing Clusters</span>
+            <span class="entry-date">2026</span>
+          </div>
+          <div class="entry-meta">Adam Lechowicz, <strong>Rohan Shenoy</strong>, Noman Bashir, Mohammad Hajiesmaili, Adam Wierman, Christina Delimitrou</div>
+          <div class="entry-venue">ACM SIGCOMM 2026</div>
+        </a>
+      </li>
+      <li>
+        <a class="entry" href="https://www.climatechange.ai/papers/neurips2024/72">
+          <div class="entry-head">
+            <span class="entry-title">Optimizing NMR Spectroscopy Pulse Sequencing with Reinforcement Learning for Soil Atomic Abundance</span>
+            <span class="entry-date">2024</span>
+          </div>
+          <div class="entry-meta"><strong>Rohan Shenoy</strong>, Hans Gaensbauer, Elsa A. Olivetti, Evan A. Coleman</div>
+          <div class="entry-venue">Workshop on Tackling Climate Change with Machine Learning (NeurIPS 2024)</div>
+        </a>
+      </li>
+      <li>
+        <a class="entry" href="https://dl.acm.org/doi/pdf/10.1145/3447555.3465326">
+          <div class="entry-head">
+            <span class="entry-title">Design Considerations for Energy-Efficient Inference on Edge Devices</span>
+            <span class="entry-date">2021</span>
+          </div>
+          <div class="entry-meta">Walid A. Hanafy, Tergel Molom-Ochir, <strong>Rohan Shenoy</strong></div>
+          <div class="entry-venue">ACM International Conference on Future Energy Systems (e-Energy 2021)</div>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section>
+    <h2 class="section-label">Coursework Projects <span class="muted">&middot; CS180 Computer Vision, UC Berkeley</span></h2>
+    <ul class="timeline compact">
+      <li><a class="entry" href="projects/project6.html"><span class="entry-title">Fun with Diffusion Models</span><span class="entry-desc">Denoising, inpainting, visual anagrams, and training UNets on MNIST.</span></a></li>
+      <li><a class="entry" href="projects/project5.html"><span class="entry-title">Neural Radiance Fields</span><span class="entry-desc">A NeRF pipeline for 3D reconstruction, from camera calibration to volume rendering.</span></a></li>
+      <li><a class="entry" href="projects/project4.html"><span class="entry-title">Image Warping and Mosaicing</span><span class="entry-desc">Homographies and panoramas with manual and automatic feature matching.</span></a></li>
+      <li><a class="entry" href="projects/project3.html"><span class="entry-title">Fun with Filters and Frequencies</span><span class="entry-desc">Edge detection, unsharp masking, hybrid images, and multi-resolution blending.</span></a></li>
+      <li><a class="entry" href="projects/project2.html"><span class="entry-title">The Prokudin-Gorskii Collection</span><span class="entry-desc">Aligning glass plate negatives to reconstruct early color photographs.</span></a></li>
+      <li><a class="entry" href="projects/project1.html"><span class="entry-title">Becoming Friends with Your Camera</span><span class="entry-desc">Perspective distortion, compression, and the dolly zoom.</span></a></li>
+    </ul>
+  </section>
+
+  <footer class="site-footer">
+    <span>rpshenoy [at] engineering [dot] upenn [dot] edu</span>
+    <span>&copy; 2026 Rohan Shenoy</span>
+  </footer>
+
+</div>
 
 <script>
 (function(){

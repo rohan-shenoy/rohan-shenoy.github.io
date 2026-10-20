@@ -13,10 +13,7 @@ No build step required. Open HTML files directly in a browser or use any local s
 ## Structure
 
 ```
-index.html              # Home/About page
-publications.html       # Publications list
-projects.html           # Projects index (links to detail pages)
-cv.html                 # Embedded PDF resume
+index.html              # Single-page site: bio, publications, coursework projects
 projects/
   project1.html         # CS180 Proj 0 — Camera
   project2.html         # CS180 Proj 1 — Prokudin-Gorskii (uses MathJax)
@@ -27,7 +24,7 @@ projects/
 assets/
   css/style.css          # Single stylesheet for the entire site
   img/headshot.jpg       # Profile photo
-  pdf/rohan_resume.pdf   # CV PDF
+  pdf/rohan_resume.pdf   # CV PDF (currently unlinked)
   Proj0/                 # Project 0 images
   proj1_outputs/         # Project 1 images
   proj2_results/         # Project 2 images
@@ -38,7 +35,8 @@ assets/
 
 ## Conventions
 
-- All pages share the same nav bar (copy-pasted, not templated). Project pages use `../` relative paths for nav links and assets.
+- The site is one page (`index.html`); there is no nav bar. Project pages have a small header linking back home and use `../` relative paths for assets.
+- Style is modeled on pi.website: monospace body text, Source Serif 4 (Google Fonts) for the name/headings, timeline lists of bordered cards with hard offset shadows. Featured publications use `.entry.featured`.
 - MathJax 3 CDN is included only on project pages that use LaTeX formulas (projects 2, 3, 6).
 - Images use `<div class="image-row">` with optional `center` class for layout.
 - CSS uses custom properties defined in `:root` in style.css for theming.
